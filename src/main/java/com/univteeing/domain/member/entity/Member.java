@@ -1,8 +1,15 @@
 package com.univteeing.domain.member.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import javax.persistence.*;
 
 @Inheritance(strategy = InheritanceType.JOINED)
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 @Entity
 public abstract class Member {
 
@@ -17,4 +24,8 @@ public abstract class Member {
 
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
+
+    public Long getId() {
+        return id;
+    }
 }
