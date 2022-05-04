@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,6 +36,10 @@ public class UserMember extends Member{
     @Embedded
     private SchoolInfo schoolInfo;
 
+    public String getNickName() {
+        return nickName;
+    }
+
     public void requestFriend(UserMember userMember) {
         Friend friend = Friend.builder()
                 .friendId(userMember.getId())
@@ -54,11 +59,5 @@ public class UserMember extends Member{
                 .build();
 
         friends.add(friend2);
-    }
-
-    public void acceptFriend(Friend friend) {
-        if (friend.isStatusResponse()) {
-            friend.changeStatusToAccept();
-        }
     }
 }

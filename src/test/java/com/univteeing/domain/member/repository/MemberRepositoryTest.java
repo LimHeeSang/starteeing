@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 class MemberRepositoryTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    UserMemberRepository memberRepository;
 
     @Test
     void 유저멤버_저장() {
