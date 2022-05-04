@@ -36,4 +36,12 @@ public class Friend {
     public FriendStatus getFriendsStatus() {
         return friendsStatus;
     }
+
+    public boolean isStatusResponse() {
+        return friendsStatus == FriendStatus.RESPONSE;
+    }
+
+    public void changeStatusToAccept() {
+        friendsStatus = FriendStatus.ACCEPT;
+    }
 }

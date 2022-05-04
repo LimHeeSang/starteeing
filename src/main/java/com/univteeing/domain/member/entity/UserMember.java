@@ -46,7 +46,7 @@ public class UserMember extends Member{
         responseFriend(userMember);
     }
 
-    public void responseFriend(UserMember userMember) {
+    private void responseFriend(UserMember userMember) {
         Friend friend2 = Friend.builder()
                 .friendId(this.getId())
                 .userMember(userMember)
@@ -54,5 +54,11 @@ public class UserMember extends Member{
                 .build();
 
         friends.add(friend2);
+    }
+
+    public void acceptFriend(Friend friend) {
+        if (friend.isStatusResponse()) {
+            friend.changeStatusToAccept();
+        }
     }
 }

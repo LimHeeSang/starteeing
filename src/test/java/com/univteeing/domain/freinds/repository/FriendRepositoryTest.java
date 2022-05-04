@@ -38,14 +38,14 @@ class FriendRepositoryTest {
         member1 = UserMember.builder().name("userA").build();
         member2 = UserMember.builder().name("userB").build();
         member3 = UserMember.builder().name("userC").build();
-    }
 
-    @Test
-    void 친구추가_요청() {
         memberRepository.save(member1);
         memberRepository.save(member2);
         memberRepository.save(member3);
+    }
 
+    @Test
+    void 친구추가_처음요청() {
         member1.requestFriend(member2);
         member1.requestFriend(member3);
 
@@ -61,5 +61,18 @@ class FriendRepositoryTest {
 
         assertThat(friends2.get(0).getFriendId()).isEqualTo(member1.getId());
         assertThat(friends2.get(0).getFriendsStatus()).isEqualTo(FriendStatus.RESPONSE);
+    }
+
+    @Test
+    void 친구추가_수락() {
+        member1.requestFriend(member2);
+
+        Friend findFriend = friendRepository.findFriendByUserMemberAndAndFriendId(member2, member1.getId()).get();
+
+        member2.acceptFriend(findFriend);
+
+        Friend findFriend2 = friendRepository.findFriendByUserMemberAndAndFriendId(member2, member1.getId()).get();
+        assertThat(findFriend2.getFriendId()).isEqualTo(member1.getId());
+        assertThat(findFriend2.getFriendsStatus()).isEqualTo(FriendStatus.ACCEPT);
     }
 }
