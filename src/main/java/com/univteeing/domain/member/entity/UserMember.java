@@ -2,6 +2,8 @@ package com.univteeing.domain.member.entity;
 
 import com.univteeing.domain.freinds.entity.Friend;
 import com.univteeing.domain.freinds.entity.FriendStatus;
+import com.univteeing.domain.member.dto.UserMemberRequestDto;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -10,10 +12,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Entity
 public class UserMember extends Member{
@@ -36,8 +36,21 @@ public class UserMember extends Member{
     @Embedded
     private SchoolInfo schoolInfo;
 
-    public String getNickName() {
-        return nickName;
+    public UserMember(UserMemberRequestDto requestDto) {
+        this.nickName = requestDto.getNickname();
+        this.birthOfDate = requestDto.getBirthOfDate();
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.temperature = 37.5D;
+        this.mbti = requestDto.getMbti();
+        this.schoolInfo = createSchoolInfo(requestDto);
+    }
+
+    private SchoolInfo createSchoolInfo(UserMemberRequestDto requestDto) {
+        return SchoolInfo.builder()
+                .school(requestDto.getSchool())
+                .department(requestDto.getDepartment())
+                .uniqSchoolNumber(requestDto.getUniqSchoolNumber())
+                .build();
     }
 
     public void requestFriend(UserMember userMember) {

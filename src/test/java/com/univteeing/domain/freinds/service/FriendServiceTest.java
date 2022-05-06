@@ -1,12 +1,11 @@
 package com.univteeing.domain.freinds.service;
 
-import com.univteeing.domain.dto.FriendDto;
+import com.univteeing.domain.dto.FriendResponseDto;
 import com.univteeing.domain.freinds.entity.Friend;
 import com.univteeing.domain.freinds.entity.FriendStatus;
 import com.univteeing.domain.freinds.repository.FriendRepository;
 import com.univteeing.domain.member.entity.UserMember;
 import com.univteeing.domain.member.repository.UserMemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -136,15 +134,15 @@ class FriendServiceTest {
         friendService.acceptFriend(member2.getId(), "userA");
         friendService.acceptFriend(member2.getId(), "userC");
 
-        List<FriendDto> friendsList = friendService.getFriendsList(member2.getId());
+        List<FriendResponseDto> friendsList = friendService.getFriendsList(member2.getId());
 
         List<Long> ids = Arrays.asList(member1.getId(), member3.getId());
         List<String> nicknames = Arrays.asList("userA", "userC");
         int idx = 0;
-        for (FriendDto friendDto : friendsList) {
-            assertThat(friendDto.getFriendId()).isEqualTo(ids.get(idx));
-            assertThat(friendDto.getFriendStatus()).isEqualTo(FriendStatus.ACCEPT);
-            assertThat(friendDto.getNickName()).isEqualTo(nicknames.get(idx++));
+        for (FriendResponseDto friendResponseDto : friendsList) {
+            assertThat(friendResponseDto.getFriendId()).isEqualTo(ids.get(idx));
+            assertThat(friendResponseDto.getFriendStatus()).isEqualTo(FriendStatus.ACCEPT);
+            assertThat(friendResponseDto.getNickName()).isEqualTo(nicknames.get(idx++));
         }
     }
 }

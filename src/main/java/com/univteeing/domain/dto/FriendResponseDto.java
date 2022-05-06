@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class FriendDto {
+public class FriendResponseDto {
 
     private Long friendId;
 
@@ -16,7 +16,7 @@ public class FriendDto {
 
     private FriendStatus friendStatus;
 
-    public FriendDto(Friend friend) {
+    public FriendResponseDto(Friend friend) {
         this.friendId = friend.getFriendId();
         this.friendStatus = friend.getFriendsStatus();
     }

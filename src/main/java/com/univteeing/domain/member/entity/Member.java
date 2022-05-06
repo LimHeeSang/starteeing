@@ -1,5 +1,6 @@
 package com.univteeing.domain.member.entity;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -7,14 +8,13 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 
 @Inheritance(strategy = InheritanceType.JOINED)
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Entity
 public abstract class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 

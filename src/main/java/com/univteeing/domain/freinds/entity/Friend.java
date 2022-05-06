@@ -2,6 +2,7 @@ package com.univteeing.domain.freinds.entity;
 
 import com.univteeing.domain.member.entity.Member;
 import com.univteeing.domain.member.entity.UserMember;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -9,13 +10,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Friend {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "friend_id")
     private Long id;
 

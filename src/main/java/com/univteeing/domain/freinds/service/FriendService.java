@@ -1,18 +1,20 @@
 package com.univteeing.domain.freinds.service;
 
-import com.univteeing.domain.dto.FriendDto;
+import com.univteeing.domain.dto.FriendResponseDto;
 import com.univteeing.domain.freinds.entity.Friend;
 import com.univteeing.domain.freinds.repository.FriendRepository;
 import com.univteeing.domain.member.entity.UserMember;
 import com.univteeing.domain.member.repository.UserMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class FriendService {
 
@@ -97,22 +99,23 @@ public class FriendService {
     /**
      * 친구리스트 조회
      */
-    public List<FriendDto> getFriendsList(Long memberId) {
+    @Transactional(readOnly = true)
+    public List<FriendResponseDto> getFriendsList(Long memberId) {
         UserMember userMember = getUserMemberForId(memberId);
         List<Friend> friends = friendRepository.findAllByUserMember(userMember);
 
         List<String> nicknames = memberRepository.findNicknamesByIdList(mapFriendsToIdList(friends));
-        List<FriendDto> friendDtos = mapFriendsToFriendDtos(friends);
+        List<FriendResponseDto> friendResponseDtos = mapFriendsToFriendDtos(friends);
 
-        addNicknames(friendDtos, nicknames);
-        return friendDtos;
+        addNicknames(friendResponseDtos, nicknames);
+        return friendResponseDtos;
     }
 
-    private List<FriendDto> mapFriendsToFriendDtos(List<Friend> friends) {
-        List<FriendDto> friendDtos = friends.stream()
-                .map(FriendDto::new)
+    private List<FriendResponseDto> mapFriendsToFriendDtos(List<Friend> friends) {
+        List<FriendResponseDto> friendResponseDtos = friends.stream()
+                .map(FriendResponseDto::new)
                 .collect(Collectors.toList());
-        return friendDtos;
+        return friendResponseDtos;
     }
 
     private List<Long> mapFriendsToIdList(List<Friend> friends) {
@@ -122,10 +125,10 @@ public class FriendService {
         return idList;
     }
 
-    private void addNicknames(List<FriendDto> friendDtos, List<String> nicknames) {
+    private void addNicknames(List<FriendResponseDto> friendResponseDtos, List<String> nicknames) {
         int idx = 0;
-        for (FriendDto friendDto : friendDtos) {
-            friendDto.setNickName(nicknames.get(idx++));
+        for (FriendResponseDto friendResponseDto : friendResponseDtos) {
+            friendResponseDto.setNickName(nicknames.get(idx++));
         }
     }
 
