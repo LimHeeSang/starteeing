@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Entity
 public class Friend {
 

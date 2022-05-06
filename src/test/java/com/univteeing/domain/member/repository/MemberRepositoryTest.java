@@ -20,7 +20,9 @@ import static org.assertj.core.api.Assertions.*;
 class MemberRepositoryTest {
 
     @Autowired
-    UserMemberRepository memberRepository;
+    UserMemberRepository userMemberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     void 유저멤버_저장() {
@@ -42,9 +44,27 @@ class MemberRepositoryTest {
                 .schoolInfo(schoolInfo)
                 .build();
 
-        memberRepository.save(member);
+        userMemberRepository.save(member);
 
-        Member findMember = memberRepository.findById(member.getId()).get();
+        Member findMember = userMemberRepository.findById(member.getId()).get();
         assertThat(findMember).isEqualTo(member);
+    }
+
+    @Test
+    void name() {
+        UserMember member1 = UserMember.builder()
+                .email("a").build();
+
+        UserMember member2 = UserMember.builder()
+                .email("b").build();
+
+        UserMember member3 = UserMember.builder()
+                .email("c").build();
+
+        userMemberRepository.save(member1);
+        userMemberRepository.save(member2);
+        userMemberRepository.save(member3);
+
+        System.out.println(memberRepository.existsByEmail("e"));
     }
 }

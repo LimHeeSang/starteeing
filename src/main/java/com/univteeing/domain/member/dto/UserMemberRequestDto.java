@@ -1,5 +1,6 @@
 package com.univteeing.domain.member.dto;
 
+import com.univteeing.domain.member.entity.MemberRole;
 import com.univteeing.domain.member.entity.SchoolInfo;
 import com.univteeing.domain.member.entity.UserMember;
 import lombok.Getter;
@@ -8,6 +9,14 @@ import java.time.LocalDate;
 
 @Getter
 public class UserMemberRequestDto {
+
+    public static final double STANDARD_TEMPERATURE = 37.5D;
+
+    private String name;
+
+    private String email;
+
+    private MemberRole memberRole;
 
     private String nickname;
 
@@ -25,11 +34,14 @@ public class UserMemberRequestDto {
 
     public UserMember toEntity() {
         return UserMember.builder()
+                .name(name)
+                .email(email)
+                .memberRole(MemberRole.ROLE_USER)
                 .nickName(nickname)
                 .birthOfDate(birthOfDate)
                 .phoneNumber(phoneNumber)
                 .mbti(mbti)
-                .temperature(37.5D)
+                .temperature(STANDARD_TEMPERATURE)
                 .schoolInfo(createSchoolInfo())
                 .build();
     }

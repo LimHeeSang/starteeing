@@ -1,6 +1,5 @@
 package com.univteeing.domain.member.repository;
 
-import com.univteeing.domain.member.entity.Member;
 import com.univteeing.domain.member.entity.UserMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
