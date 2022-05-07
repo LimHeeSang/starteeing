@@ -1,11 +1,9 @@
 package com.starteeing.golbal.response.result;
 
 import com.starteeing.domain.member.entity.UserMember;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SingleResultTest {
 
