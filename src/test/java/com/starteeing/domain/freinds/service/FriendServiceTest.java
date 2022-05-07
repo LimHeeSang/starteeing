@@ -46,8 +46,6 @@ class FriendServiceTest {
 
     @Test
     void 친구추가_처음요청() {
-        //member1 -> member2에게 처음 친추요청
-
         friendService.requestFriend(member1.getId(), "userB");
 
         Friend friend1 = friendRepository.findByUserMemberAndFriendId(member1, member2.getId()).get();
@@ -62,7 +60,6 @@ class FriendServiceTest {
 
     @Test
     void 친구추가_재요청() {
-        //member1 -> member2에게 처음 친추요청
         friendService.requestFriend(member1.getId(), "userB");
         friendService.acceptFriend(member2.getId(), "userA");
         friendService.deleteFriend(member2.getId(), "userA");
