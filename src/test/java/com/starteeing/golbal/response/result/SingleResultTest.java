@@ -1,5 +1,6 @@
 package com.starteeing.golbal.response.result;
 
+import com.starteeing.domain.member.entity.UserMember;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,9 +10,9 @@ class SingleResultTest {
 
     @Test
     void create() {
-        String testData = "테스트 데이터";
-        SingleResult<String> result = new SingleResult<>(testData);
+        UserMember member = UserMember.builder().build();
+        SingleResult<UserMember> result = new SingleResult<>(member);
 
-        Assertions.assertThat(result.getData()).isEqualTo(testData);
+        Assertions.assertThat(result.getData()).isEqualTo(member);
     }
 }
