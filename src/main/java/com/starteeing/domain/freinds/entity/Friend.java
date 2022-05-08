@@ -37,6 +37,10 @@ public class Friend {
         return friendsStatus;
     }
 
+    public UserMember getUserMember() {
+        return userMember;
+    }
+
     public boolean isStatusResponse() {
         return friendsStatus == FriendStatus.RESPONSE;
     }
