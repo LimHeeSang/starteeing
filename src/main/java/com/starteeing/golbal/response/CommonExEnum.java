@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum CommonEnum {
+public enum CommonExEnum {
     SUCCESS(HttpStatus.OK, "E0001", "정상 요청입니다."),
     FAIL(HttpStatus.BAD_REQUEST, "E0002", "잘못된 요청입니다.");
 
