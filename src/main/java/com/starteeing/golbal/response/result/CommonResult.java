@@ -1,6 +1,6 @@
 package com.starteeing.golbal.response.result;
 
-import com.starteeing.golbal.response.CommonEnum;
+import com.starteeing.golbal.response.CommonExEnum;
 import lombok.Getter;
 
 @Getter
@@ -10,12 +10,12 @@ public class CommonResult {
     private String message;
 
     public void success() {
-        code = CommonEnum.SUCCESS.getCode();
-        message = CommonEnum.SUCCESS.getMessage();
+        code = CommonExEnum.SUCCESS.getCode();
+        message = CommonExEnum.SUCCESS.getMessage();
     }
 
     public void fail() {
-        code = CommonEnum.FAIL.getCode();
-        message = CommonEnum.FAIL.getMessage();
+        code = CommonExEnum.FAIL.getCode();
+        message = CommonExEnum.FAIL.getMessage();
     }
 }

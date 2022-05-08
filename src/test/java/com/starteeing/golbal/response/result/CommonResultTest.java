@@ -1,6 +1,6 @@
 package com.starteeing.golbal.response.result;
 
-import com.starteeing.golbal.response.CommonEnum;
+import com.starteeing.golbal.response.CommonExEnum;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -13,15 +13,15 @@ class CommonResultTest {
     void success메소드_검증() {
         result.success();
 
-        assertThat(result.getCode()).isEqualTo(CommonEnum.SUCCESS.getCode());
-        assertThat(result.getMessage()).isEqualTo(CommonEnum.SUCCESS.getMessage());
+        assertThat(result.getCode()).isEqualTo(CommonExEnum.SUCCESS.getCode());
+        assertThat(result.getMessage()).isEqualTo(CommonExEnum.SUCCESS.getMessage());
     }
 
     @Test
     void fail메소드_검증() {
         result.fail();
 
-        assertThat(result.getCode()).isEqualTo(CommonEnum.FAIL.getCode());
-        assertThat(result.getMessage()).isEqualTo(CommonEnum.FAIL.getMessage());
+        assertThat(result.getCode()).isEqualTo(CommonExEnum.FAIL.getCode());
+        assertThat(result.getMessage()).isEqualTo(CommonExEnum.FAIL.getMessage());
     }
 }

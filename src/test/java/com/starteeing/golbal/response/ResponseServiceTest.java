@@ -37,8 +37,8 @@ class ResponseServiceTest {
         SingleResult<UserMember> result = responseService.createSingleResult(userMember);
 
         assertThat(result.getData()).isEqualTo(userMember);
-        assertThat(result.getCode()).isEqualTo(CommonEnum.SUCCESS.getCode());
-        assertThat(result.getMessage()).isEqualTo(CommonEnum.SUCCESS.getMessage());
+        assertThat(result.getCode()).isEqualTo(CommonExEnum.SUCCESS.getCode());
+        assertThat(result.getMessage()).isEqualTo(CommonExEnum.SUCCESS.getMessage());
     }
 
     @Test
@@ -46,23 +46,23 @@ class ResponseServiceTest {
         ListResult<UserMember> result = responseService.createListResult(userMembers);
 
         assertThat(result.getData()).contains(userMember1, userMember2, userMember3);
-        assertThat(result.getCode()).isEqualTo(CommonEnum.SUCCESS.getCode());
-        assertThat(result.getMessage()).isEqualTo(CommonEnum.SUCCESS.getMessage());
+        assertThat(result.getCode()).isEqualTo(CommonExEnum.SUCCESS.getCode());
+        assertThat(result.getMessage()).isEqualTo(CommonExEnum.SUCCESS.getMessage());
     }
 
     @Test
     void 성공결과만_처리() {
         CommonResult result = responseService.createSuccessResult();
 
-        assertThat(result.getCode()).isEqualTo(CommonEnum.SUCCESS.getCode());
-        assertThat(result.getMessage()).isEqualTo(CommonEnum.SUCCESS.getMessage());
+        assertThat(result.getCode()).isEqualTo(CommonExEnum.SUCCESS.getCode());
+        assertThat(result.getMessage()).isEqualTo(CommonExEnum.SUCCESS.getMessage());
     }
 
     @Test
     void 실패결과만_처리() {
         CommonResult result = responseService.createFailResult();
 
-        assertThat(result.getCode()).isEqualTo(CommonEnum.FAIL.getCode());
-        assertThat(result.getMessage()).isEqualTo(CommonEnum.FAIL.getMessage());
+        assertThat(result.getCode()).isEqualTo(CommonExEnum.FAIL.getCode());
+        assertThat(result.getMessage()).isEqualTo(CommonExEnum.FAIL.getMessage());
     }
 }
