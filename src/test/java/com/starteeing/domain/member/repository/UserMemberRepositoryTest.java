@@ -1,10 +1,9 @@
-package com.starteeing.domain.freinds.service;
+package com.starteeing.domain.member.repository;
 
-import com.starteeing.domain.freinds.repository.FriendRepository;
 import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;
-import com.starteeing.domain.member.repository.UserMemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-public class FriendServiceExceptionTest {
+class UserMemberRepositoryTest {
 
     @Autowired
-    UserMemberRepository userMemberRepository;
-    @Autowired
-    FriendRepository friendRepository;
-    @Autowired
-    FriendService friendService;
+    private UserMemberRepository userMemberRepository;
 
     UserMember member1;
     UserMember member2;
@@ -62,30 +59,18 @@ public class FriendServiceExceptionTest {
     }
 
     @Test
-    void 친구요청시_이미보낸적있으면_예외() {
-        friendService.requestFriend(member1.getId(), "userB");
+    void findByNickName() {
+        UserMember findMember = userMemberRepository.findByNickName("userB").get();
 
-        assertThatThrownBy(() -> {
-            friendService.requestFriend(member1.getId(), "userB");
-        }).isInstanceOf(IllegalCallerException.class);
+        assertThat(findMember).isEqualTo(member2);
+        assertThat(findMember.getId()).isEqualTo(member2.getId());
     }
 
     @Test
-    void 친구요청시_받았던적있으면_예외() {
-        friendService.requestFriend(member2.getId(), "userA");
+    void findNicknamesByIdList() {
+        List<Long> ids = Arrays.asList(member1.getId(), member3.getId());
 
-        assertThatThrownBy(() -> {
-            friendService.requestFriend(member1.getId(), "userB");
-        }).isInstanceOf(IllegalCallerException.class);
-    }
-
-    @Test
-    void 친구요청시_이미친구인경우_예외() {
-        friendService.requestFriend(member1.getId(), "userB");
-        friendService.acceptFriend(member2.getId(), "userA");
-
-        assertThatThrownBy(() -> {
-            friendService.requestFriend(member1.getId(), "userB");
-        }).isInstanceOf(IllegalCallerException.class);
+        List<String> nicknames = userMemberRepository.findNicknamesByIdList(ids);
+        assertThat(nicknames).contains("userA", "userC");
     }
 }

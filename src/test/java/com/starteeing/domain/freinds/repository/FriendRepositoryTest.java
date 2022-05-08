@@ -38,7 +38,6 @@ class FriendRepositoryTest {
         userMember2 = createUserMember("bbb@naver.com", "userB", "010-1234-0001", "12340001");
         userMember3 = createUserMember("ccc@naver.com", "userC", "010-1234-0002", "12340002");
 
-
         userMemberRepository.save(userMember1);
         userMemberRepository.save(userMember2);
         userMemberRepository.save(userMember3);
@@ -47,7 +46,6 @@ class FriendRepositoryTest {
                 .friendId(userMember2.getId())
                 .friendsStatus(FriendStatus.REQUEST)
                 .build();
-
         friend2 = Friend.builder().userMember(userMember1)
                 .friendId(userMember3.getId())
                 .friendsStatus(FriendStatus.REQUEST)

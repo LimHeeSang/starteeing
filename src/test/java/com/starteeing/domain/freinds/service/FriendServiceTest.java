@@ -42,11 +42,6 @@ class FriendServiceTest {
         member2 = createUserMember("bbb@naver.com", "userB", "010-1234-0001", "12340001");
         member3 = createUserMember("ccc@naver.com", "userC", "010-1234-0002", "12340002");
 
-        System.out.println("----------");
-        System.out.println(member1);
-        System.out.println(member2);
-        System.out.println(member3);
-
         userMemberRepository.save(member1);
         userMemberRepository.save(member2);
         userMemberRepository.save(member3);
