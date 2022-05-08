@@ -7,7 +7,6 @@ import lombok.Getter;
 public class CommonResult {
 
     private String code;
-
     private String message;
 
     public void success() {
