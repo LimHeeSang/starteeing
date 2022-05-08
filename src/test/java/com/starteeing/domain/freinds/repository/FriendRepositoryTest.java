@@ -1,6 +1,9 @@
 package com.starteeing.domain.freinds.repository;
 
 import com.starteeing.domain.freinds.entity.Friend;
+import com.starteeing.domain.freinds.entity.FriendStatus;
+import com.starteeing.domain.member.entity.MemberRole;
+import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.UserMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,9 +34,9 @@ class FriendRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        userMember1 = UserMember.builder().build();
-        userMember2 = UserMember.builder().build();
-        userMember3 = UserMember.builder().build();
+        userMember1 = createUserMember("aaa@naver.com", "userA", "010-1234-0000", "12340000");
+        userMember2 = createUserMember("bbb@naver.com", "userB", "010-1234-0001", "12340001");
+        userMember3 = createUserMember("ccc@naver.com", "userC", "010-1234-0002", "12340002");
 
 
         userMemberRepository.save(userMember1);
@@ -41,14 +45,36 @@ class FriendRepositoryTest {
 
         friend1 = Friend.builder().userMember(userMember1)
                 .friendId(userMember2.getId())
+                .friendsStatus(FriendStatus.REQUEST)
                 .build();
 
         friend2 = Friend.builder().userMember(userMember1)
                 .friendId(userMember3.getId())
+                .friendsStatus(FriendStatus.REQUEST)
                 .build();
 
         friendRepository.save(friend1);
         friendRepository.save(friend2);
+    }
+
+    public UserMember createUserMember(String email, String nickName, String phoneNumber, String schoolNumber) {
+        SchoolInfo schoolInfo = SchoolInfo.builder()
+                .school("순천향대")
+                .department("정보보호학과")
+                .uniqSchoolNumber(schoolNumber)
+                .build();
+
+        return UserMember.builder()
+                .name("홍길동")
+                .email(email)
+                .memberRole(MemberRole.ROLE_USER)
+                .nickName(nickName)
+                .birthOfDate(LocalDate.of(1998, 9, 4))
+                .phoneNumber(phoneNumber)
+                .mbti("estj")
+                .temperature(37.5D)
+                .schoolInfo(schoolInfo)
+                .build();
     }
 
     @Test

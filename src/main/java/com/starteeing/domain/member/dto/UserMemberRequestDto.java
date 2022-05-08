@@ -3,10 +3,12 @@ package com.starteeing.domain.member.dto;
 import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Builder
 @Getter
 public class UserMemberRequestDto {
 

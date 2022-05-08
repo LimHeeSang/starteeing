@@ -14,10 +14,12 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class SchoolInfo {
 
+    @Column(nullable = false)
     private String school;
 
+    @Column(nullable = false)
     private String department;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String uniqSchoolNumber;
 }

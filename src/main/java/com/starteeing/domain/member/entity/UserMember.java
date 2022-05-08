@@ -16,16 +16,19 @@ import java.util.List;
 @Entity
 public class UserMember extends Member{
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nickName;
 
+    @Column(nullable = false)
     private LocalDate birthOfDate;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
     private String mbti;
 
+    @Column(nullable = false)
     private double temperature;
 
     @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL)

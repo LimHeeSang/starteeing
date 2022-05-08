@@ -4,8 +4,11 @@ import com.starteeing.domain.dto.FriendResponseDto;
 import com.starteeing.domain.freinds.entity.Friend;
 import com.starteeing.domain.freinds.entity.FriendStatus;
 import com.starteeing.domain.freinds.repository.FriendRepository;
+import com.starteeing.domain.member.entity.MemberRole;
+import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.UserMemberRepository;
+import org.apache.tomcat.jni.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +24,6 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = true)
 class FriendServiceTest {
     @Autowired
     UserMemberRepository userMemberRepository;
@@ -35,13 +38,38 @@ class FriendServiceTest {
 
     @BeforeEach
     void setUp() {
-        member1 = UserMember.builder().nickName("userA").build();
-        member2 = UserMember.builder().nickName("userB").build();
-        member3 = UserMember.builder().nickName("userC").build();
+        member1 = createUserMember("aaa@naver.com", "userA", "010-1234-0000", "12340000");
+        member2 = createUserMember("bbb@naver.com", "userB", "010-1234-0001", "12340001");
+        member3 = createUserMember("ccc@naver.com", "userC", "010-1234-0002", "12340002");
+
+        System.out.println("----------");
+        System.out.println(member1);
+        System.out.println(member2);
+        System.out.println(member3);
 
         userMemberRepository.save(member1);
         userMemberRepository.save(member2);
         userMemberRepository.save(member3);
+    }
+
+    public UserMember createUserMember(String email, String nickName, String phoneNumber, String schoolNumber) {
+        SchoolInfo schoolInfo = SchoolInfo.builder()
+                .school("순천향대")
+                .department("정보보호학과")
+                .uniqSchoolNumber(schoolNumber)
+                .build();
+
+        return UserMember.builder()
+                .name("홍길동")
+                .email(email)
+                .memberRole(MemberRole.ROLE_USER)
+                .nickName(nickName)
+                .birthOfDate(LocalDate.of(1998, 9, 4))
+                .phoneNumber(phoneNumber)
+                .mbti("estj")
+                .temperature(37.5D)
+                .schoolInfo(schoolInfo)
+                .build();
     }
 
     @Test

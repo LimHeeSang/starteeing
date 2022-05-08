@@ -23,10 +23,11 @@ public class Friend {
     @JoinColumn(name = "member_id")
     private UserMember userMember;
 
-    @Column(name = "member_friend_id")
+    @Column(name = "member_friend_id", nullable = false)
     private Long friendId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FriendStatus friendsStatus;
 
     public Long getFriendId() {
