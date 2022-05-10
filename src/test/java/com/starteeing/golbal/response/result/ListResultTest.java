@@ -18,8 +18,7 @@ class ListResultTest {
         UserMember member3 = UserMember.builder().build();
 
         List<UserMember> members = Arrays.asList(member1, member2, member3);
-
-        ListResult<UserMember> result = new ListResult<>(members);
+        ListResult<UserMember> result = ListResult.createListResult(members);
 
         assertThat(result.getData()).contains(member1, member2, member3);
     }
