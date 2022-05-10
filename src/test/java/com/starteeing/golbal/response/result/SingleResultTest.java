@@ -10,7 +10,7 @@ class SingleResultTest {
     @Test
     void create() {
         UserMember member = UserMember.builder().build();
-        SingleResult<UserMember> result = new SingleResult<>(member);
+        SingleResult<UserMember> result = SingleResult.createSingleResult(member);
 
         assertThat(result.getData()).isEqualTo(member);
     }
