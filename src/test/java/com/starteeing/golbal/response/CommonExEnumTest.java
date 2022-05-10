@@ -1,5 +1,6 @@
 package com.starteeing.golbal.response;
 
+import com.starteeing.golbal.exception.common.CommonExEnum;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
