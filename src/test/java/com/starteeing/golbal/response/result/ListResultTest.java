@@ -1,13 +1,12 @@
 package com.starteeing.golbal.response.result;
 
 import com.starteeing.domain.member.entity.UserMember;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ListResultTest {
 
