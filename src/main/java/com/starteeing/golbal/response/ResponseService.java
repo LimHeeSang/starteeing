@@ -1,5 +1,6 @@
 package com.starteeing.golbal.response;
 
+import com.starteeing.golbal.exception.common.ExceptionEnum;
 import com.starteeing.golbal.response.result.CommonResult;
 import com.starteeing.golbal.response.result.ListResult;
 import com.starteeing.golbal.response.result.SingleResult;
@@ -11,38 +12,37 @@ import java.util.List;
 public class ResponseService {
     
     /**
-     * 단일 결과 성공 처리
+     * 단일 데이터 + 성공 응답 처리
      */
-    public <T> SingleResult<T> createSingleResult(T data) {
-        SingleResult<T> result = new SingleResult<>(data);
-        result.success();
-        return result;
+    public <T> SingleResult<T> getSingleResult(T data) {
+        return SingleResult.createSingleResult(data);
     }
 
     /**
-     * 복수 결과 성공 처리
+     * 복수 데이터 + 성공 응답 처리
      */
-    public <T> ListResult<T> createListResult(List<T> data) {
-        ListResult<T> result = new ListResult<>(data);
-        result.success();
-        return result;
+    public <T> ListResult<T> getListResult(List<T> data) {
+        return ListResult.createListResult(data);
     }
 
     /**
-     * 성공 결과만 처리
+     * 성공 응답 처리
      */
-    public CommonResult createSuccessResult() {
-        CommonResult result = new CommonResult();
-        result.success();
-        return result;
+    public CommonResult getSuccessResult() {
+        return CommonResult.createSuccessResult();
     }
 
     /**
-     * 실패 결과만 처리
+     * 에러 응답 처리
      */
-    public CommonResult createFailResult() {
-        CommonResult result = new CommonResult();
-        result.fail();
-        return result;
+    public CommonResult getErrorResult() {
+        return CommonResult.createErrorResult();
+    }
+
+    /**
+     * 넘어온 에러 정보에 근거하여 에러 응답 처리
+     */
+    public CommonResult getErrorResult(ExceptionEnum exceptionEnum) {
+        return CommonResult.createErrorResult(exceptionEnum);
     }
 }

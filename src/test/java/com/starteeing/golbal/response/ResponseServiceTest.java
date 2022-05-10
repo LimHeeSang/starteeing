@@ -1,6 +1,7 @@
 package com.starteeing.golbal.response;
 
 import com.starteeing.domain.member.entity.UserMember;
+import com.starteeing.golbal.exception.common.CommonExEnum;
 import com.starteeing.golbal.response.result.CommonResult;
 import com.starteeing.golbal.response.result.ListResult;
 import com.starteeing.golbal.response.result.SingleResult;
@@ -34,7 +35,7 @@ class ResponseServiceTest {
 
     @Test
     void 단일결과_성공처리() {
-        SingleResult<UserMember> result = responseService.createSingleResult(userMember);
+        SingleResult<UserMember> result = responseService.getSingleResult(userMember);
 
         assertThat(result.getData()).isEqualTo(userMember);
         assertThat(result.getCode()).isEqualTo(CommonExEnum.SUCCESS.getCode());
@@ -43,7 +44,7 @@ class ResponseServiceTest {
 
     @Test
     void 복수결과_성공처리() {
-        ListResult<UserMember> result = responseService.createListResult(userMembers);
+        ListResult<UserMember> result = responseService.getListResult(userMembers);
 
         assertThat(result.getData()).contains(userMember1, userMember2, userMember3);
         assertThat(result.getCode()).isEqualTo(CommonExEnum.SUCCESS.getCode());
@@ -52,7 +53,7 @@ class ResponseServiceTest {
 
     @Test
     void 성공결과만_처리() {
-        CommonResult result = responseService.createSuccessResult();
+        CommonResult result = responseService.getSuccessResult();
 
         assertThat(result.getCode()).isEqualTo(CommonExEnum.SUCCESS.getCode());
         assertThat(result.getMessage()).isEqualTo(CommonExEnum.SUCCESS.getMessage());
@@ -60,7 +61,7 @@ class ResponseServiceTest {
 
     @Test
     void 실패결과만_처리() {
-        CommonResult result = responseService.createFailResult();
+        CommonResult result = responseService.getErrorResult();
 
         assertThat(result.getCode()).isEqualTo(CommonExEnum.FAIL.getCode());
         assertThat(result.getMessage()).isEqualTo(CommonExEnum.FAIL.getMessage());
