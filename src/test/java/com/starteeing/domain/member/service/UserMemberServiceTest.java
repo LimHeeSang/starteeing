@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserMemberServiceTest {
@@ -47,7 +46,7 @@ class UserMemberServiceTest {
 
     @Test
     void 중복회원_회원가입_예외() {
-        when(memberRepository.existsByEmail("abc@naver.com")).thenReturn(true);
+        given(memberRepository.existsByEmail("abc@naver.com")).willReturn(true);
 
         assertThatThrownBy(
                 () -> userMemberService.memberJoin(createUserMemberRequestDto())
