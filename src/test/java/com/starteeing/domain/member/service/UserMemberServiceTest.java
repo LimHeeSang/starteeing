@@ -2,19 +2,23 @@ package com.starteeing.domain.member.service;
 
 import com.starteeing.domain.member.dto.UserMemberRequestDto;
 import com.starteeing.domain.member.entity.MemberRole;
+import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.repository.MemberRepository;
 import com.starteeing.domain.member.repository.UserMemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,11 +33,16 @@ class UserMemberServiceTest {
 
     @Test
     void 회원가입() {
-        when(userMemberRepository.save(any())).thenReturn(createUserMemberRequestDto().toEntity());
+        UserMember saveMember = createUserMemberRequestDto().toEntity();
+        Long fakeMemberId = 1L;
+        ReflectionTestUtils.setField(saveMember, "id", fakeMemberId);
+
+        given(userMemberRepository.save(any())).willReturn(saveMember);
 
         UserMemberRequestDto memberRequestDto = createUserMemberRequestDto();
+        Long savedId = userMemberService.memberJoin(memberRequestDto);
 
-        userMemberService.memberJoin(memberRequestDto);
+        Assertions.assertThat(savedId).isEqualTo(fakeMemberId);
     }
 
     @Test
