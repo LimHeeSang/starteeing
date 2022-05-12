@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 public class UserMemberRequestDto {
 
-    public static final double STANDARD_TEMPERATURE = 37.5D;
+    public static final double STANDARD_TEMPERATURE = 36.5D;
 
     private String name;
 

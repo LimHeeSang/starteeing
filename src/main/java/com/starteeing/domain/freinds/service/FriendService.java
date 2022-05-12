@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class FriendService {
 
     private final FriendRepository friendRepository;
-    private final UserMemberRepository memberRepository;
+    private final UserMemberRepository userMemberRepository;
 
     /**
      * 친구요청 & 재요청
@@ -30,8 +30,12 @@ public class FriendService {
 
         //이전에 요청을 보냈던적이 있었던 경우
         if (friendRepository.existsByUserMemberAndFriendId(toMember, fromMember.getId())) {
-            Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).get();
-            Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).get();
+            Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
+                    () -> new NoSuchElementException("찾으려는 친구가 없습니다.")
+            );
+            Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
+                    () -> new NoSuchElementException("찾으려는 친구가 없습니다.")
+            );
 
             toFriend.reRequestFriend();
             fromFriend.reResponseFriend();
@@ -104,7 +108,7 @@ public class FriendService {
         UserMember userMember = getUserMemberForId(memberId);
         List<Friend> friends = friendRepository.findAllByUserMember(userMember);
 
-        List<String> nicknames = memberRepository.findNicknamesByIdList(mapFriendsToIdList(friends));
+        List<String> nicknames = userMemberRepository.findNicknamesByIdList(mapFriendsToIdList(friends));
         List<FriendResponseDto> friendResponseDtos = mapFriendsToFriendDtos(friends);
 
         addNicknames(friendResponseDtos, nicknames);
@@ -133,13 +137,13 @@ public class FriendService {
     }
 
     private UserMember getUserMemberForNickname(String fromNickname) {
-        return memberRepository.findByNickName(fromNickname).orElseThrow(
+        return userMemberRepository.findByNickName(fromNickname).orElseThrow(
                 () -> new NoSuchElementException("찾으려는 멤버가 없습니다.")
         );
     }
 
     private UserMember getUserMemberForId(Long toMemberId) {
-        return memberRepository.findById(toMemberId).orElseThrow(
+        return userMemberRepository.findById(toMemberId).orElseThrow(
                 () -> new NoSuchElementException("찾으려는 멤버가 없습니다.")
         );
     }

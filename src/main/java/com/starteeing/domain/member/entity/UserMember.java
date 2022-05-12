@@ -37,6 +37,10 @@ public class UserMember extends Member{
     @Embedded
     private SchoolInfo schoolInfo;
 
+    public List<Friend> getFriends() {
+        return friends;
+    }
+
     public void requestFriend(UserMember userMember) {
         Friend friend = Friend.builder()
                 .friendId(userMember.getId())
@@ -55,6 +59,6 @@ public class UserMember extends Member{
                 .friendsStatus(FriendStatus.RESPONSE)
                 .build();
 
-        friends.add(friend2);
+        userMember.friends.add(friend2);
     }
 }
