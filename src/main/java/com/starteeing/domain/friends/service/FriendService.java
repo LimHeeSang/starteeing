@@ -1,8 +1,8 @@
-package com.starteeing.domain.freinds.service;
+package com.starteeing.domain.friends.service;
 
-import com.starteeing.domain.dto.FriendResponseDto;
-import com.starteeing.domain.freinds.entity.Friend;
-import com.starteeing.domain.freinds.repository.FriendRepository;
+import com.starteeing.domain.friends.dto.FriendResponseDto;
+import com.starteeing.domain.friends.entity.Friend;
+import com.starteeing.domain.friends.repository.FriendRepository;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.UserMemberRepository;
 import lombok.RequiredArgsConstructor;

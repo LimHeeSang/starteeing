@@ -1,7 +1,7 @@
-package com.starteeing.domain.freinds.repository;
+package com.starteeing.domain.friends.repository;
 
-import com.starteeing.domain.freinds.entity.Friend;
-import com.starteeing.domain.freinds.entity.FriendStatus;
+import com.starteeing.domain.friends.entity.Friend;
+import com.starteeing.domain.friends.entity.FriendStatus;
 import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;

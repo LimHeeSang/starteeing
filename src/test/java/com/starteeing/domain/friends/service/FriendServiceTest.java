@@ -1,9 +1,9 @@
-package com.starteeing.domain.freinds.service;
+package com.starteeing.domain.friends.service;
 
-import com.starteeing.domain.dto.FriendResponseDto;
-import com.starteeing.domain.freinds.entity.Friend;
-import com.starteeing.domain.freinds.entity.FriendStatus;
-import com.starteeing.domain.freinds.repository.FriendRepository;
+import com.starteeing.domain.friends.dto.FriendResponseDto;
+import com.starteeing.domain.friends.entity.Friend;
+import com.starteeing.domain.friends.entity.FriendStatus;
+import com.starteeing.domain.friends.repository.FriendRepository;
 import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;

@@ -1,5 +1,6 @@
-package com.starteeing.domain.freinds.entity;
+package com.starteeing.domain.friends.entity;
 
+import com.starteeing.domain.common.BaseTimeEntity;
 import com.starteeing.domain.member.entity.UserMember;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Friend {
+public class Friend extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

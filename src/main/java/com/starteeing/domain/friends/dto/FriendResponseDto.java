@@ -1,8 +1,8 @@
-package com.starteeing.domain.dto;
+package com.starteeing.domain.friends.dto;
 
 
-import com.starteeing.domain.freinds.entity.Friend;
-import com.starteeing.domain.freinds.entity.FriendStatus;
+import com.starteeing.domain.friends.entity.Friend;
+import com.starteeing.domain.friends.entity.FriendStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

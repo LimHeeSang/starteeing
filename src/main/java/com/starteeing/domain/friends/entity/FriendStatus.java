@@ -1,4 +1,4 @@
-package com.starteeing.domain.freinds.entity;
+package com.starteeing.domain.friends.entity;
 
 public enum FriendStatus {
      REQUEST, RESPONSE, ACCEPT, REJECT, DELETE
