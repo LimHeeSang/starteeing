@@ -35,7 +35,23 @@ class UserMemberRepositoryTest {
         userMemberRepository.save(member3);
     }
 
-    public UserMember createUserMember(String email, String nickName, String phoneNumber, String schoolNumber) {
+    @Test
+    void findByNickName() {
+        UserMember findMember = userMemberRepository.findByNickName("userB").get();
+
+        assertThat(findMember).isEqualTo(member2);
+        assertThat(findMember.getId()).isEqualTo(member2.getId());
+    }
+
+    @Test
+    void findNicknamesByIdList() {
+        List<Long> ids = Arrays.asList(member1.getId(), member3.getId());
+
+        List<String> nicknames = userMemberRepository.findNicknamesByIdList(ids);
+        assertThat(nicknames).contains("userA", "userC");
+    }
+
+    private UserMember createUserMember(String email, String nickName, String phoneNumber, String schoolNumber) {
         SchoolInfo schoolInfo = SchoolInfo.builder()
                 .school("순천향대")
                 .department("정보보호학과")
@@ -53,21 +69,5 @@ class UserMemberRepositoryTest {
                 .temperature(37.5D)
                 .schoolInfo(schoolInfo)
                 .build();
-    }
-
-    @Test
-    void findByNickName() {
-        UserMember findMember = userMemberRepository.findByNickName("userB").get();
-
-        assertThat(findMember).isEqualTo(member2);
-        assertThat(findMember.getId()).isEqualTo(member2.getId());
-    }
-
-    @Test
-    void findNicknamesByIdList() {
-        List<Long> ids = Arrays.asList(member1.getId(), member3.getId());
-
-        List<String> nicknames = userMemberRepository.findNicknamesByIdList(ids);
-        assertThat(nicknames).contains("userA", "userC");
     }
 }

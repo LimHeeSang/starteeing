@@ -1,7 +1,8 @@
 package com.starteeing.domain.member.entity;
 
-import com.starteeing.domain.freinds.entity.Friend;
-import com.starteeing.domain.freinds.entity.FriendStatus;
+import com.starteeing.domain.common.BaseTimeEntity;
+import com.starteeing.domain.friends.entity.Friend;
+import com.starteeing.domain.friends.entity.FriendStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @Entity
-public class UserMember extends Member{
+public class UserMember extends Member {
 
     @Column(unique = true, nullable = false)
     private String nickName;

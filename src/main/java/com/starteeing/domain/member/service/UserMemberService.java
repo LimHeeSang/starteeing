@@ -3,7 +3,6 @@ package com.starteeing.domain.member.service;
 import com.starteeing.domain.member.dto.UserMemberRequestDto;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
-import com.starteeing.domain.member.exception.MemberExEnum;
 import com.starteeing.domain.member.repository.MemberRepository;
 import com.starteeing.domain.member.repository.UserMemberRepository;
 import lombok.RequiredArgsConstructor;
