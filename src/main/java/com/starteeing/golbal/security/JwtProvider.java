@@ -23,7 +23,9 @@ import java.util.List;
 public class JwtProvider {
 
     private static final String ISSUER = "starting";
-    private static final Long tokenValidMillisecond = 60 * 60 * 1000L;
+    private static final Long TOKEN_VALID_MILLISECOND = 60 * 60 * 1000L;
+    public static final String HEADER_NAME_X_AUTH_TOKEN = "X-AUTH-TOKEN";
+    public static final String CLAIM_NAME_ROLES = "roles";
 
     @Value("spring.jwt.secret")
     private final String secretKey;
@@ -47,9 +49,9 @@ public class JwtProvider {
         return Jwts.builder()
                 .setIssuer(ISSUER)
                 .setSubject(email)
-                .claim("roles", roles)
+                .claim(CLAIM_NAME_ROLES, roles)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + TOKEN_VALID_MILLISECOND))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -72,7 +74,7 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader(HEADER_NAME_X_AUTH_TOKEN);
     }
 
     /**
