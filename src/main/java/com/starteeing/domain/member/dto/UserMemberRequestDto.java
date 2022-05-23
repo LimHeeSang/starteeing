@@ -24,6 +24,9 @@ public class UserMemberRequestDto {
     @NotBlank
     private String email;
 
+    @NotBlank
+    private String password;
+
     private MemberRole memberRole;
 
     @NotEmpty
@@ -48,6 +51,7 @@ public class UserMemberRequestDto {
         return UserMember.builder()
                 .name(name)
                 .email(email)
+                .password(password)
                 .memberRole(MemberRole.ROLE_USER)
                 .nickName(nickname)
                 .birthOfDate(birthOfDate)
