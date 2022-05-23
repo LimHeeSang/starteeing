@@ -4,7 +4,6 @@ import com.starteeing.domain.member.dto.UserMemberRequestDto;
 import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +16,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
