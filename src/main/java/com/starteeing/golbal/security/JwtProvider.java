@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +28,8 @@ public class JwtProvider {
     public static final String HEADER_NAME_X_AUTH_TOKEN = "X-AUTH-TOKEN";
     public static final String CLAIM_NAME_ROLES = "roles";
 
-    @Value("spring.jwt.secret")
-    private final String secretKey;
+    @Value("${spring.jwt.secret}")
+    private String secretKey;
 
     private SecretKey key;
 
@@ -66,7 +67,7 @@ public class JwtProvider {
 
     private String parseUserEmail(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -82,7 +83,7 @@ public class JwtProvider {
      */
     public boolean validateToken(String token) {
         try {
-            Claims body = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+            Claims body = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
             return body.getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
