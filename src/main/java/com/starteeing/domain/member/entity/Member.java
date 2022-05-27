@@ -43,8 +43,4 @@ public abstract class Member extends BaseTimeEntity {
                 .map(MemberRole::getMemberRoleEnum)
                 .collect(Collectors.toList());
     }
-
-    public void encodePassword(String encodedPassword) {
-        password = encodedPassword;
-    }
 }
