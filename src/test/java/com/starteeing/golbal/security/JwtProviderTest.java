@@ -1,22 +1,24 @@
 package com.starteeing.golbal.security;
 
 import com.starteeing.domain.member.dto.UserMemberRequestDto;
-import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 class JwtProviderTest {
 
     private static final String EMAIL = "abc@naver.com";
@@ -28,25 +30,31 @@ class JwtProviderTest {
     @Autowired
     MemberRepository memberRepository;
 
-    UserMember member;
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    UserMemberRequestDto userMemberRequestDto;
+
+    @Autowired
+    AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @BeforeEach
     void setUp() {
-        member = createUserMemberRequestDto().toEntity();
-        Long fakeMemberId = 1L;
-        ReflectionTestUtils.setField(member, "id", fakeMemberId);
+        UserMember userMember = createUserMemberRequestDto().toEntity(bCryptPasswordEncoder);
+        memberRepository.save(userMember);
 
-        memberRepository.save(member);
+        userMemberRequestDto = createUserMemberRequestDto();
     }
 
     @Test
     void createToken() {
-        String jwtToken = jwtProvider.createToken(EMAIL, Arrays.asList("ROLE_USER"));
+        String testToken = createTestToken();
     }
 
     @Test
     void getAuthentication() {
-        String jwtToken = jwtProvider.createToken(EMAIL, Arrays.asList("ROLE_USER"));
+        String jwtToken = createTestToken();
+
         Authentication authentication = jwtProvider.getAuthentication(jwtToken);
 
         assertThat(authentication.isAuthenticated()).isTrue();
@@ -55,11 +63,17 @@ class JwtProviderTest {
 
     @Test
     void validateToken() {
-        String jwtToken = jwtProvider.createToken(EMAIL, Arrays.asList("ROLE_USER"));
+        String jwtToken = createTestToken();
 
         boolean result = jwtProvider.validateToken(jwtToken);
 
         assertThat(result).isTrue();
+    }
+
+    private String createTestToken() {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMemberRequestDto.getEmail(), userMemberRequestDto.getPassword());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        return jwtProvider.createToken(authentication);
     }
 
     private UserMemberRequestDto createUserMemberRequestDto() {
@@ -67,7 +81,6 @@ class JwtProviderTest {
                 .name("홍길동")
                 .email(EMAIL)
                 .password(PASSWORD)
-                .memberRole(MemberRole.ROLE_USER)
                 .nickname("길동이")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")
