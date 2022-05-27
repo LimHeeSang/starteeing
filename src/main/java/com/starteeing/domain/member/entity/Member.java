@@ -2,11 +2,15 @@ package com.starteeing.domain.member.entity;
 
 import com.starteeing.domain.common.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,7 +33,18 @@ public abstract class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private MemberRole memberRole;
+    @Builder.Default
+    @OneToMany(mappedBy = "member")
+    protected List<MemberRole> memberRoles = new ArrayList<>();
+
+    public List<MemberRoleEnum> mapToMemberRoleEnum() {
+        return memberRoles.stream()
+                .map(MemberRole::getMemberRoleEnum)
+                .collect(Collectors.toList());
+    }
+
+    public void encodePassword(String encodedPassword) {
+        password = encodedPassword;
+    }
 }
