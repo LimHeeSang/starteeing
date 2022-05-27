@@ -1,12 +1,12 @@
 package com.starteeing.domain.member.entity;
 
-import com.starteeing.domain.common.BaseTimeEntity;
 import com.starteeing.domain.friends.entity.Friend;
 import com.starteeing.domain.friends.entity.FriendStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,6 +37,11 @@ public class UserMember extends Member {
 
     @Embedded
     private SchoolInfo schoolInfo;
+
+    @PostConstruct
+    private void init() {
+        memberRoles.add(new MemberRole(MemberRoleEnum.ROLE_USER));
+    }
 
     public List<Friend> getFriends() {
         return friends;
