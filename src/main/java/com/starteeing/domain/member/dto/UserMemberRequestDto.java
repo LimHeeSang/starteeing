@@ -1,11 +1,11 @@
 package com.starteeing.domain.member.dto;
 
-import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -27,8 +27,6 @@ public class UserMemberRequestDto {
     @NotBlank
     private String password;
 
-    private MemberRole memberRole;
-
     @NotEmpty
     private String nickname;
 
@@ -47,12 +45,11 @@ public class UserMemberRequestDto {
     @NotNull
     private String uniqSchoolNumber;
 
-    public UserMember toEntity() {
+    public UserMember toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {
         return UserMember.builder()
                 .name(name)
                 .email(email)
-                .password(password)
-                .memberRole(MemberRole.ROLE_USER)
+                .password(bCryptPasswordEncoder.encode(password))
                 .nickName(nickname)
                 .birthOfDate(birthOfDate)
                 .phoneNumber(phoneNumber)
