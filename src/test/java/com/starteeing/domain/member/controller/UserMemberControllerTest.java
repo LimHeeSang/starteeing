@@ -2,7 +2,6 @@ package com.starteeing.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starteeing.domain.member.dto.UserMemberRequestDto;
-import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.exception.MemberExEnum;
 import com.starteeing.domain.member.service.UserMemberService;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -90,7 +88,6 @@ class UserMemberControllerTest {
         return UserMemberRequestDto.builder()
                 .name("홍길동")
                 .email("abc@naver.com")
-                .memberRole(MemberRole.ROLE_USER)
                 .nickname("길동이")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")
@@ -105,7 +102,6 @@ class UserMemberControllerTest {
         return UserMemberRequestDto.builder()
                 .name("qweqwe09042")
                 .email("")
-                .memberRole(MemberRole.ROLE_USER)
                 .nickname("")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("")

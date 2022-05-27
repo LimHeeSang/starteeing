@@ -1,7 +1,6 @@
 package com.starteeing.domain.member.service;
 
 import com.starteeing.domain.member.dto.UserMemberRequestDto;
-import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.repository.MemberRepository;
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -32,7 +32,7 @@ class UserMemberServiceTest {
 
     @Test
     void 회원가입() {
-        UserMember saveMember = createUserMemberRequestDto().toEntity();
+        UserMember saveMember = createUserMemberRequestDto().toEntity(new BCryptPasswordEncoder());
         Long fakeMemberId = 1L;
         ReflectionTestUtils.setField(saveMember, "id", fakeMemberId);
 
@@ -57,7 +57,6 @@ class UserMemberServiceTest {
         return UserMemberRequestDto.builder()
                 .name("홍길동")
                 .email("abc@naver.com")
-                .memberRole(MemberRole.ROLE_USER)
                 .nickname("길동이")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")

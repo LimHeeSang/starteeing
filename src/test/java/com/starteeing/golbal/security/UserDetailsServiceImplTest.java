@@ -1,7 +1,6 @@
 package com.starteeing.golbal.security;
 
 import com.starteeing.domain.member.dto.UserMemberRequestDto;
-import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -36,7 +36,7 @@ class UserDetailsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        member = createUserMemberRequestDto().toEntity();
+        member = createUserMemberRequestDto().toEntity(new BCryptPasswordEncoder());
         Long fakeMemberId = 1L;
         ReflectionTestUtils.setField(member, "id", fakeMemberId);
     }
@@ -47,7 +47,6 @@ class UserDetailsServiceImplTest {
         UserDetails userDetails = userDetailsService.loadUserByUsername(EMAIL);
 
         assertThat(userDetails.getUsername()).isEqualTo(EMAIL);
-        assertThat(userDetails.getPassword()).isEqualTo(PASSWORD);
     }
 
     private UserMemberRequestDto createUserMemberRequestDto() {
@@ -55,7 +54,6 @@ class UserDetailsServiceImplTest {
                 .name("홍길동")
                 .email(EMAIL)
                 .password(PASSWORD)
-                .memberRole(MemberRole.ROLE_USER)
                 .nickname("길동이")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")

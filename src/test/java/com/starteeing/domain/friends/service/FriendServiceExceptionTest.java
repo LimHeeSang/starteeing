@@ -3,7 +3,6 @@ package com.starteeing.domain.friends.service;
 import com.starteeing.domain.friends.entity.Friend;
 import com.starteeing.domain.friends.entity.FriendStatus;
 import com.starteeing.domain.friends.repository.FriendRepository;
-import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.UserMemberRepository;
@@ -107,7 +106,6 @@ public class FriendServiceExceptionTest {
         return UserMember.builder()
                 .name("홍길동")
                 .email(email)
-                .memberRole(MemberRole.ROLE_USER)
                 .nickName(nickName)
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber(phoneNumber)

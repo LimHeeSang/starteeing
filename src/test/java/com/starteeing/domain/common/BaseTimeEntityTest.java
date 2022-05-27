@@ -1,6 +1,5 @@
 package com.starteeing.domain.common;
 
-import com.starteeing.domain.member.entity.MemberRole;
 import com.starteeing.domain.member.entity.SchoolInfo;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.UserMemberRepository;
@@ -41,7 +40,6 @@ class BaseTimeEntityTest {
         return UserMember.builder()
                 .name("홍길동")
                 .email(email)
-                .memberRole(MemberRole.ROLE_USER)
                 .nickName(nickName)
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber(phoneNumber)

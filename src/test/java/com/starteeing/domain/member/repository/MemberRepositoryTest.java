@@ -1,8 +1,6 @@
 package com.starteeing.domain.member.repository;
 
-import com.starteeing.domain.member.entity.MemberRole;
-import com.starteeing.domain.member.entity.SchoolInfo;
-import com.starteeing.domain.member.entity.UserMember;
+import com.starteeing.domain.member.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ class MemberRepositoryTest {
         userMember = UserMember.builder()
                 .name("홍길동")
                 .email("abc@naver.com")
-                .memberRole(MemberRole.ROLE_USER)
+                .password("1234")
                 .nickName("길동이")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")
@@ -48,5 +46,11 @@ class MemberRepositoryTest {
     void existsByEmail() {
         boolean result = memberRepository.existsByEmail("abc@naver.com");
         assertThat(result).isTrue();
+    }
+
+    @Test
+    void findByEmailWithMemberRoles() {
+        Member member = memberRepository.findByEmailWithMemberRoles("abc@naver.com").get();
+        assertThat(member.getMemberRoles()).contains(new MemberRole(MemberRoleEnum.ROLE_USER));
     }
 }
