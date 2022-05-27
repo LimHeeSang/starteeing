@@ -9,16 +9,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Component
 public class JwtProvider {
 
@@ -43,13 +46,17 @@ public class JwtProvider {
     /**
      * Jwt token 생성
      */
-    public String createToken(String email, List<String> roles) {
+    public String createToken(Authentication authentication) {
         Date now = new Date();
+
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(", "));
 
         return Jwts.builder()
                 .setIssuer(ISSUER)
-                .setSubject(email)
-                .claim(CLAIM_NAME_ROLES, roles)
+                .setSubject(authentication.getName())
+                .claim(CLAIM_NAME_ROLES, authorities)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TOKEN_VALID_MILLISECOND))
                 .signWith(key, SignatureAlgorithm.HS512)
