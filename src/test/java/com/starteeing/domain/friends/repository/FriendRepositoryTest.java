@@ -62,6 +62,7 @@ class FriendRepositoryTest {
         return UserMember.builder()
                 .name("홍길동")
                 .email(email)
+                .password("1234")
                 .nickName(nickName)
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber(phoneNumber)

@@ -41,6 +41,7 @@ class BaseTimeEntityTest {
                 .name("홍길동")
                 .email(email)
                 .nickName(nickName)
+                .password("1234")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber(phoneNumber)
                 .mbti("estj")
