@@ -8,13 +8,18 @@ import com.starteeing.domain.member.service.UserMemberService;
 import com.starteeing.golbal.exception.common.CommonExEnum;
 import com.starteeing.golbal.response.ResponseService;
 import com.starteeing.golbal.response.result.CommonResult;
+import com.starteeing.golbal.security.JwtProvider;
+import com.starteeing.golbal.security.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.servlet.Filter;
 import java.time.LocalDate;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -36,6 +41,10 @@ class UserMemberControllerTest {
     UserMemberService userMemberService;
     @MockBean
     ResponseService responseService;
+    @Autowired
+    JwtProvider jwtProvider;
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     @Test
     void signup() throws Exception {
@@ -88,6 +97,7 @@ class UserMemberControllerTest {
         return UserMemberRequestDto.builder()
                 .name("홍길동")
                 .email("abc@naver.com")
+                .password("1234")
                 .nickname("길동이")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")
@@ -102,6 +112,7 @@ class UserMemberControllerTest {
         return UserMemberRequestDto.builder()
                 .name("qweqwe09042")
                 .email("")
+                .password("1234")
                 .nickname("")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("")
