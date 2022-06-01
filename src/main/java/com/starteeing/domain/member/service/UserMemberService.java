@@ -3,7 +3,6 @@ package com.starteeing.domain.member.service;
 import com.starteeing.domain.member.dto.MemberLoginRequestDto;
 import com.starteeing.domain.member.dto.MemberLoginResponseDto;
 import com.starteeing.domain.member.dto.UserMemberRequestDto;
-import com.starteeing.domain.member.entity.Member;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.repository.MemberRepository;
@@ -14,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +59,6 @@ public class UserMemberService {
                 .accessToken(token)
                 .build();
     }
-    // TODO: 2022-05-26 비밀번호 일치과정을 AUthentication provider에게 넘기기 => login과정 디테일하게 살펴보기 - ok
-    // TODO: 2022-05-27 에러 해결을 provider의 authenticate를 직접 구현해야할지... 하 starbooks는 잘됐는데?
     // TODO: 2022-05-26 RefreshToken은 어떻게 념겨주고 관리하는지?
+    // TODO: 2022-05-28 spring security적용으로 깨진 테스트코드 복구하기 usermemberControllerTest부터
 }
