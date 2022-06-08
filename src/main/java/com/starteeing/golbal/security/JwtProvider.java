@@ -5,23 +5,18 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-@Transactional
 @Component
 public class JwtProvider {
 
@@ -30,17 +25,14 @@ public class JwtProvider {
     public static final String HEADER_NAME_X_AUTH_TOKEN = "X-AUTH-TOKEN";
     public static final String CLAIM_NAME_ROLES = "roles";
 
-    @Value("${spring.jwt.secret}")
-    private String secretKey;
-
-    private SecretKey key;
+    private final SecretKey key;
 
     private final UserDetailsServiceImpl userDetailsService;
 
-    @PostConstruct
-    private void init() {
+    public JwtProvider(@Value("${spring.jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        key = Keys.hmacShaKeyFor(keyBytes);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.userDetailsService = userDetailsService;
     }
 
     /**
