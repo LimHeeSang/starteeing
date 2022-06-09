@@ -8,18 +8,20 @@ import com.starteeing.domain.member.service.UserMemberService;
 import com.starteeing.golbal.exception.common.CommonExEnum;
 import com.starteeing.golbal.response.ResponseService;
 import com.starteeing.golbal.response.result.CommonResult;
-import com.starteeing.golbal.security.JwtProvider;
-import com.starteeing.golbal.security.UserDetailsServiceImpl;
+import com.starteeing.golbal.security.JwtAuthenticationFilter;
+import com.starteeing.golbal.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.servlet.Filter;
 import java.time.LocalDate;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -29,7 +31,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WithMockUser
+@MockBean(JpaMetamodelMappingContext.class)
+@WebMvcTest(controllers = UserMemberController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthenticationFilter.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)})
 class UserMemberControllerTest {
 
     @Autowired
@@ -41,10 +48,6 @@ class UserMemberControllerTest {
     UserMemberService userMemberService;
     @MockBean
     ResponseService responseService;
-    @Autowired
-    JwtProvider jwtProvider;
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
 
     @Test
     void signup() throws Exception {
@@ -56,6 +59,7 @@ class UserMemberControllerTest {
         mockMvc.perform(post("/members")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
@@ -73,6 +77,7 @@ class UserMemberControllerTest {
         mockMvc.perform(post("/members")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", is(MemberExEnum.ALREADY_EXIST_MEMBER.getCode())))
@@ -89,6 +94,7 @@ class UserMemberControllerTest {
         mockMvc.perform(post("/members")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
