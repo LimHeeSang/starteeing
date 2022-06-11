@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,6 +34,7 @@ class MemberRepositoryTest {
                 .email("abc@naver.com")
                 .password("1234")
                 .nickName("길동이")
+                .memberRoles(Arrays.asList(new MemberRole(MemberRoleEnum.ROLE_USER)))
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")
                 .mbti("estj")
@@ -51,6 +53,6 @@ class MemberRepositoryTest {
     @Test
     void findByEmailWithMemberRoles() {
         Member member = memberRepository.findByEmailWithMemberRoles("abc@naver.com").get();
-        assertThat(member.getMemberRoles()).contains(new MemberRole(MemberRoleEnum.ROLE_USER));
+        assertThat(member.getMemberRoles()).containsOnly(new MemberRole(MemberRoleEnum.ROLE_USER));
     }
 }
