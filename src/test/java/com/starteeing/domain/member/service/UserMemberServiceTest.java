@@ -27,6 +27,8 @@ class UserMemberServiceTest {
     UserMemberRepository userMemberRepository;
     @Mock
     MemberRepository memberRepository;
+    @Mock
+    BCryptPasswordEncoder bCryptPasswordEncoder;
     @InjectMocks
     UserMemberService userMemberService;
 
@@ -57,6 +59,7 @@ class UserMemberServiceTest {
         return UserMemberRequestDto.builder()
                 .name("홍길동")
                 .email("abc@naver.com")
+                .password("1234")
                 .nickname("길동이")
                 .birthOfDate(LocalDate.of(1998, 9, 4))
                 .phoneNumber("010-8543-0619")
