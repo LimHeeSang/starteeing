@@ -43,7 +43,7 @@ class UserDetailsServiceImplTest {
 
     @Test
     void loadUserByUsername() {
-        given(memberRepository.findByEmail(any())).willReturn(Optional.ofNullable(member));
+        given(memberRepository.findByEmailWithMemberRoles(any())).willReturn(Optional.ofNullable(member));
         UserDetails userDetails = userDetailsService.loadUserByUsername(EMAIL);
 
         assertThat(userDetails.getUsername()).isEqualTo(EMAIL);
