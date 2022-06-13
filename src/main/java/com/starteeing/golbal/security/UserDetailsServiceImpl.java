@@ -3,6 +3,7 @@ package com.starteeing.golbal.security;
 import com.starteeing.domain.member.entity.Member;
 import com.starteeing.domain.member.entity.MemberRoleEnum;
 import com.starteeing.domain.member.exception.ExistMemberException;
+import com.starteeing.domain.member.exception.NotExistMemberException;
 import com.starteeing.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmailWithMemberRoles(email).orElseThrow(ExistMemberException::new);
+        Member member = memberRepository.findByEmailWithMemberRoles(email).orElseThrow(NotExistMemberException::new);
         return createUser(member);
     }
 
