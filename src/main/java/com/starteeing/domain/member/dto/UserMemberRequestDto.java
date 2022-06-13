@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Builder
 @Getter
@@ -30,7 +31,7 @@ public class UserMemberRequestDto {
     @NotEmpty
     private String nickname;
 
-    private LocalDate birthOfDate;
+    private String birthOfDate;
 
     private String phoneNumber;
 
@@ -51,12 +52,17 @@ public class UserMemberRequestDto {
                 .email(email)
                 .password(bCryptPasswordEncoder.encode(password))
                 .nickName(nickname)
-                .birthOfDate(birthOfDate)
+                .birthOfDate(mapToLocalDate(birthOfDate))
                 .phoneNumber(phoneNumber)
                 .mbti(mbti)
                 .temperature(STANDARD_TEMPERATURE)
                 .schoolInfo(createSchoolInfo())
                 .build();
+    }
+
+    private LocalDate mapToLocalDate(String birthOfDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(birthOfDate, formatter);
     }
 
     private SchoolInfo createSchoolInfo() {
