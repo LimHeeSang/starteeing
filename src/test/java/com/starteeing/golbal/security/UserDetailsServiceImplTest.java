@@ -55,7 +55,7 @@ class UserDetailsServiceImplTest {
                 .email(EMAIL)
                 .password(PASSWORD)
                 .nickname("길동이")
-                .birthOfDate(LocalDate.of(1998, 9, 4))
+                .birthOfDate("1998-09-04")
                 .phoneNumber("010-8543-0619")
                 .mbti("estj")
                 .school("순천향대")

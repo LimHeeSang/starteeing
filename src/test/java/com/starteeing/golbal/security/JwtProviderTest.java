@@ -13,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -82,7 +80,7 @@ class JwtProviderTest {
                 .email(EMAIL)
                 .password(PASSWORD)
                 .nickname("길동이")
-                .birthOfDate(LocalDate.of(1998, 9, 4))
+                .birthOfDate("1998-09-04")
                 .phoneNumber("010-8543-0619")
                 .mbti("estj")
                 .school("순천향대")
