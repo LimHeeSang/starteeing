@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,9 +37,9 @@ public class UserMember extends Member {
     @Embedded
     private SchoolInfo schoolInfo;
 
-    @PostConstruct
-    private void init() {
-        memberRoles.add(new MemberRole(MemberRoleEnum.ROLE_USER));
+    {
+        MemberRole memberRole = MemberRole.builder().memberRoleEnum(MemberRoleEnum.ROLE_USER).member(this).build();
+        memberRoles.add(memberRole);
     }
 
     public List<Friend> getFriends() {
