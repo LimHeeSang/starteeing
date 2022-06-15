@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +23,9 @@ public class JwtProvider {
 
     private static final String ISSUER = "starting";
     private static final Long TOKEN_VALID_MILLISECOND = 60 * 60 * 1000L;
-    public static final String HEADER_NAME_X_AUTH_TOKEN = "X-AUTH-TOKEN";
-    public static final String CLAIM_NAME_ROLES = "roles";
+    private static final String CLAIM_NAME_ROLES = "roles";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private final SecretKey key;
 
@@ -67,7 +69,11 @@ public class JwtProvider {
      * Header 에서 Token Parsing
      */
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(HEADER_NAME_X_AUTH_TOKEN);
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     /**
