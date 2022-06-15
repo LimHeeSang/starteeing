@@ -35,7 +35,7 @@ public abstract class Member extends BaseTimeEntity {
 
     @Column(nullable = false)
     @Builder.Default
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     protected List<MemberRole> memberRoles = new ArrayList<>();
 
     public List<MemberRoleEnum> mapToMemberRoleEnum() {
