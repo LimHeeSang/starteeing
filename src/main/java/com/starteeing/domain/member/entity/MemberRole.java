@@ -16,6 +16,7 @@ public class MemberRole {
     @Column(name = "MemberRole_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private MemberRoleEnum memberRoleEnum;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
