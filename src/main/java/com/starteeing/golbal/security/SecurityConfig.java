@@ -1,5 +1,9 @@
 package com.starteeing.golbal.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starteeing.golbal.response.ResponseService;
+import com.starteeing.golbal.security.handler.JwtAccessDeniedHandler;
+import com.starteeing.golbal.security.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final ResponseService responseService;
+    private final ObjectMapper objectMapper;
+
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -24,11 +31,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic().disable()
                 .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint())
+                .accessDeniedHandler(jwtAccessDeniedHandler())
+
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login", "/members").permitAll()
+                .antMatchers("/test").hasRole("ADMIN")
                 .anyRequest().hasRole("USER")
+
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
     }
@@ -56,5 +71,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint(responseService, objectMapper);
+    }
+
+    @Bean
+    public JwtAccessDeniedHandler jwtAccessDeniedHandler() {
+        return new JwtAccessDeniedHandler(responseService, objectMapper);
     }
 }
