@@ -7,5 +7,11 @@ import lombok.Getter;
 @Getter
 public class MemberLoginResponseDto {
 
+    private String grantType;
+
+    private Long accessTokenExpireDate;
+
     private String accessToken;
+
+    private String refreshToken;
 }

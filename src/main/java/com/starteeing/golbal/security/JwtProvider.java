@@ -1,5 +1,6 @@
 package com.starteeing.golbal.security;
 
+import com.starteeing.domain.member.dto.MemberLoginResponseDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,10 +23,12 @@ import java.util.stream.Collectors;
 public class JwtProvider {
 
     private static final String ISSUER = "starting";
-    private static final Long TOKEN_VALID_MILLISECOND = 60 * 60 * 1000L;
+    private static final Long ACCESS_TOKEN_VALID_MILLISECOND = 1000 * 60 * 30L;
+    private static final Long REFRESH_TOKEN_VALID_MILLISECOND = 1000 * 60 * 60 * 24 * 7L;
     private static final String CLAIM_NAME_ROLES = "roles";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final String GRANT_TYPE = "Bearer";
 
     private final SecretKey key;
 
@@ -40,21 +43,44 @@ public class JwtProvider {
     /**
      * Jwt token 생성
      */
-    public String createToken(Authentication authentication) {
+    public MemberLoginResponseDto createToken(Authentication authentication) {
+        String authorities = getAuthorities(authentication);
         Date now = new Date();
 
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(", "));
+        String accessToken = createAccessToken(authentication, authorities, now);
+        String refreshToken = createRefreshToken(now);
 
+        return MemberLoginResponseDto.builder()
+                .grantType(GRANT_TYPE)
+                .accessTokenExpireDate(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    private String createRefreshToken(Date now) {
+        return Jwts.builder()
+                .setIssuer(ISSUER)
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    private String createAccessToken(Authentication authentication, String authorities, Date now) {
         return Jwts.builder()
                 .setIssuer(ISSUER)
                 .setSubject(authentication.getName())
                 .claim(CLAIM_NAME_ROLES, authorities)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + TOKEN_VALID_MILLISECOND))
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+    }
+
+    private String getAuthorities(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(", "));
     }
 
     /**
@@ -76,6 +102,11 @@ public class JwtProvider {
         return null;
     }
 
+    private String parseUserEmail(String token) {
+        return parseBody(token)
+                .getSubject();
+    }
+
     /**
      * Jwt 의 유효성 및 만료일짜 확인
      */
@@ -86,11 +117,6 @@ public class JwtProvider {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    private String parseUserEmail(String token) {
-        return parseBody(token)
-                .getSubject();
     }
 
     private Claims parseBody(String token) {

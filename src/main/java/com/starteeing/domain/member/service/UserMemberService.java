@@ -53,11 +53,7 @@ public class UserMemberService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        String token = jwtProvider.createToken(authentication);
-
-        return MemberLoginResponseDto.builder()
-                .accessToken(token)
-                .build();
+        return jwtProvider.createToken(authentication);
     }
     // TODO: 2022-05-26 RefreshToken은 어떻게 념겨주고 관리하는지?
     // TODO: 2022-05-28 spring security적용으로 깨진 테스트코드 복구하기 usermemberControllerTest부터

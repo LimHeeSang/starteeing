@@ -71,7 +71,7 @@ class JwtProviderTest {
     private String createTestToken() {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMemberRequestDto.getEmail(), userMemberRequestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        return jwtProvider.createToken(authentication);
+        return jwtProvider.createToken(authentication).getAccessToken();
     }
 
     private UserMemberRequestDto createUserMemberRequestDto() {
