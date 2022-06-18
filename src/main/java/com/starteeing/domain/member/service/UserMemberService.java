@@ -2,7 +2,7 @@ package com.starteeing.domain.member.service;
 
 import com.starteeing.domain.member.dto.MemberLoginRequestDto;
 import com.starteeing.domain.member.dto.MemberLoginResponseDto;
-import com.starteeing.domain.member.dto.UserMemberRequestDto;
+import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.repository.MemberRepository;
@@ -31,7 +31,7 @@ public class UserMemberService {
     /**
      * 회원가입
      */
-    public Long memberJoin(UserMemberRequestDto memberRequestDto) {
+    public Long memberJoin(UserMemberSignupRequestDto memberRequestDto) {
         validateDuplicateMember(memberRequestDto);
 
         UserMember userMember = memberRequestDto.toEntity(bCryptPasswordEncoder);
@@ -40,7 +40,7 @@ public class UserMemberService {
         return savedMember.getId();
     }
 
-    private void validateDuplicateMember(UserMemberRequestDto memberRequestDto) {
+    private void validateDuplicateMember(UserMemberSignupRequestDto memberRequestDto) {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             throw new ExistMemberException();
         }

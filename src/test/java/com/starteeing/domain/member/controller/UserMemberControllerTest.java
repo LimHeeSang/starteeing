@@ -1,7 +1,7 @@
 package com.starteeing.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.starteeing.domain.member.dto.UserMemberRequestDto;
+import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.exception.MemberExEnum;
 import com.starteeing.domain.member.service.UserMemberService;
@@ -21,8 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDate;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,7 +54,7 @@ class UserMemberControllerTest {
         given(userMemberService.memberJoin(createUserMemberRequestDto())).willReturn(1L);
         given(responseService.getSuccessResult()).willReturn(CommonResult.createSuccessResult());
 
-        mockMvc.perform(post("/members")
+        mockMvc.perform(post("/signup")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -74,7 +72,7 @@ class UserMemberControllerTest {
         given(responseService.getErrorResult(MemberExEnum.ALREADY_EXIST_MEMBER))
                 .willReturn(CommonResult.createErrorResult(MemberExEnum.ALREADY_EXIST_MEMBER));
 
-        mockMvc.perform(post("/members")
+        mockMvc.perform(post("/signup")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -91,7 +89,7 @@ class UserMemberControllerTest {
         given(responseService.getErrorResult(CommonExEnum.INVALID_BINGING_VALUE))
                 .willReturn(CommonResult.createErrorResult(CommonExEnum.INVALID_BINGING_VALUE));
 
-        mockMvc.perform(post("/members")
+        mockMvc.perform(post("/signup")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -99,8 +97,8 @@ class UserMemberControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    private UserMemberRequestDto createUserMemberRequestDto() {
-        return UserMemberRequestDto.builder()
+    private UserMemberSignupRequestDto createUserMemberRequestDto() {
+        return UserMemberSignupRequestDto.builder()
                 .name("홍길동")
                 .email("abc@naver.com")
                 .password("1234")
@@ -114,8 +112,8 @@ class UserMemberControllerTest {
                 .build();
     }
 
-    private UserMemberRequestDto createWrongUserMemberDto() {
-        return UserMemberRequestDto.builder()
+    private UserMemberSignupRequestDto createWrongUserMemberDto() {
+        return UserMemberSignupRequestDto.builder()
                 .name("qweqwe09042")
                 .email("")
                 .password("1234")

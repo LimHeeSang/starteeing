@@ -1,6 +1,6 @@
 package com.starteeing.golbal.security;
 
-import com.starteeing.domain.member.dto.UserMemberRequestDto;
+import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class JwtProviderTest {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    UserMemberRequestDto userMemberRequestDto;
+    UserMemberSignupRequestDto userMemberSignupRequestDto;
 
     @Autowired
     AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -41,7 +41,7 @@ class JwtProviderTest {
         UserMember userMember = createUserMemberRequestDto().toEntity(bCryptPasswordEncoder);
         memberRepository.save(userMember);
 
-        userMemberRequestDto = createUserMemberRequestDto();
+        userMemberSignupRequestDto = createUserMemberRequestDto();
     }
 
     @Test
@@ -69,13 +69,13 @@ class JwtProviderTest {
     }
 
     private String createTestToken() {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMemberRequestDto.getEmail(), userMemberRequestDto.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userMemberSignupRequestDto.getEmail(), userMemberSignupRequestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return jwtProvider.createToken(authentication).getAccessToken();
     }
 
-    private UserMemberRequestDto createUserMemberRequestDto() {
-        return UserMemberRequestDto.builder()
+    private UserMemberSignupRequestDto createUserMemberRequestDto() {
+        return UserMemberSignupRequestDto.builder()
                 .name("홍길동")
                 .email(EMAIL)
                 .password(PASSWORD)

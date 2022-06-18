@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 @Builder
 @Getter
-public class UserMemberRequestDto {
+public class UserMemberSignupRequestDto {
 
     public static final double STANDARD_TEMPERATURE = 36.5D;
 

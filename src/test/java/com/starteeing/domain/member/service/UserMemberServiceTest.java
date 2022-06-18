@@ -1,6 +1,6 @@
 package com.starteeing.domain.member.service;
 
-import com.starteeing.domain.member.dto.UserMemberRequestDto;
+import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.repository.MemberRepository;
@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +38,7 @@ class UserMemberServiceTest {
 
         given(userMemberRepository.save(any())).willReturn(saveMember);
 
-        UserMemberRequestDto memberRequestDto = createUserMemberRequestDto();
+        UserMemberSignupRequestDto memberRequestDto = createUserMemberRequestDto();
         Long savedId = userMemberService.memberJoin(memberRequestDto);
 
         Assertions.assertThat(savedId).isEqualTo(fakeMemberId);
@@ -55,8 +53,8 @@ class UserMemberServiceTest {
         ).isInstanceOf(ExistMemberException.class);
     }
 
-    private UserMemberRequestDto createUserMemberRequestDto() {
-        return UserMemberRequestDto.builder()
+    private UserMemberSignupRequestDto createUserMemberRequestDto() {
+        return UserMemberSignupRequestDto.builder()
                 .name("홍길동")
                 .email("abc@naver.com")
                 .password("1234")
