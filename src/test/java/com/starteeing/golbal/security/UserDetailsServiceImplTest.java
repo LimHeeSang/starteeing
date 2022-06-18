@@ -1,6 +1,6 @@
 package com.starteeing.golbal.security;
 
-import com.starteeing.domain.member.dto.UserMemberRequestDto;
+import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,8 +48,8 @@ class UserDetailsServiceImplTest {
         assertThat(userDetails.getUsername()).isEqualTo(EMAIL);
     }
 
-    private UserMemberRequestDto createUserMemberRequestDto() {
-        return UserMemberRequestDto.builder()
+    private UserMemberSignupRequestDto createUserMemberRequestDto() {
+        return UserMemberSignupRequestDto.builder()
                 .name("홍길동")
                 .email(EMAIL)
                 .password(PASSWORD)
