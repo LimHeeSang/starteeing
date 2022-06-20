@@ -91,6 +91,10 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    private String parseUserEmail(String token) {
+        return parseBody(token).getSubject();
+    }
+
     /**
      * Header 에서 Token Parsing
      */
@@ -100,11 +104,6 @@ public class JwtProvider {
             return bearerToken.substring(7);
         }
         return null;
-    }
-
-    private String parseUserEmail(String token) {
-        return parseBody(token)
-                .getSubject();
     }
 
     /**
