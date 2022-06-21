@@ -2,6 +2,7 @@ package com.starteeing.domain.member.controller;
 
 import com.starteeing.domain.member.dto.MemberLoginRequestDto;
 import com.starteeing.domain.member.dto.MemberLoginResponseDto;
+import com.starteeing.domain.member.dto.MemberReissueRequestDto;
 import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
 import com.starteeing.domain.member.service.UserMemberService;
 import com.starteeing.golbal.response.ResponseService;
@@ -36,6 +37,11 @@ public class UserMemberController {
     }
 
     @PostMapping("/reissue")
+    public ResponseEntity<SingleResult> reissue(@RequestBody @Validated MemberReissueRequestDto reissueRequestDto) {
+        MemberLoginResponseDto memberLoginResponseDto = userMemberService.reissue(reissueRequestDto);
+
+        return ResponseEntity.ok(responseService.getSingleResult(memberLoginResponseDto));
+    }
 
     @GetMapping("/test")
     public ResponseEntity<CommonResult> test() {
