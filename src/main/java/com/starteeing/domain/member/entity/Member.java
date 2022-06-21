@@ -38,9 +38,22 @@ public abstract class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     protected List<MemberRole> memberRoles = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "refresh_token_id")
+    private RefreshToken refreshToken;
+
     public List<MemberRoleEnum> mapToMemberRoleEnum() {
         return memberRoles.stream()
                 .map(MemberRole::getMemberRoleEnum)
                 .collect(Collectors.toList());
+    }
+
+    public void saveRefreshToken(String token) {
+        RefreshToken refreshToken  = RefreshToken.builder()
+                .member(this)
+                .refreshToken(token)
+                .build();
+
+        this.refreshToken = refreshToken;
     }
 }
