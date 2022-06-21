@@ -13,6 +13,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByEmail(String email);
 
+    Optional<Member> findByEmail(String email);
+
     @Query("select m from Member m left join fetch m.memberRoles where m.email = :email")
     Optional<Member> findByEmailWithMemberRoles(@Param("email") String email);
+
+    @Query("select m from Member m left join fetch m.refreshToken where m.email = :email")
+    Optional<Member> findByEmailWithRefreshToken(@Param("email") String email);
 }
