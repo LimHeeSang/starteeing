@@ -9,6 +9,7 @@ import com.starteeing.domain.member.entity.RefreshToken;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.exception.NotExistMemberException;
+import com.starteeing.domain.member.exception.NotExistTokenException;
 import com.starteeing.domain.member.exception.NotValidTokenException;
 import com.starteeing.domain.member.repository.MemberRepository;
 import com.starteeing.domain.member.repository.RefreshTokenRepository;
@@ -78,7 +79,7 @@ public class UserMemberService {
 
         Authentication authentication = jwtProvider.getAuthentication(reissueRequestDto.getAccessToken());
         Member findMember = memberRepository.findByEmailWithRefreshToken(authentication.getName()).orElseThrow(NotExistMemberException::new);
-        RefreshToken refreshToken = findMember.getRefreshToken();
+        RefreshToken refreshToken = findMember.getRefreshToken().orElseThrow(NotExistTokenException::new);
 
         if (!refreshToken.isEqualTokenValue(reissueRequestDto.getRefreshToken())) {
             throw new NotValidTokenException();

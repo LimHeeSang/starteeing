@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -55,5 +56,9 @@ public abstract class Member extends BaseTimeEntity {
                 .build();
 
         this.refreshToken = refreshToken;
+    }
+
+    public Optional<RefreshToken> getRefreshToken() {
+        return Optional.ofNullable(refreshToken);
     }
 }
