@@ -12,7 +12,6 @@ import com.starteeing.domain.member.exception.NotExistMemberException;
 import com.starteeing.domain.member.exception.NotExistTokenException;
 import com.starteeing.domain.member.exception.NotValidTokenException;
 import com.starteeing.domain.member.repository.MemberRepository;
-import com.starteeing.domain.member.repository.RefreshTokenRepository;
 import com.starteeing.domain.member.repository.UserMemberRepository;
 import com.starteeing.golbal.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class UserMemberService {
 
     private final UserMemberRepository userMemberRepository;
     private final MemberRepository memberRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     private final JwtProvider jwtProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
