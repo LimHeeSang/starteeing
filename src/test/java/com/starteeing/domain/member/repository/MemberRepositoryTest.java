@@ -60,6 +60,14 @@ class MemberRepositoryTest {
     }
 
     @Test
+    void findByEmail() {
+        Member member = memberRepository.findByEmail("abc@naver.com").get();
+
+        assertThat(member.getEmail()).isEqualTo("abc@naver.com");
+        assertThat(member.getName()).isEqualTo("홍길동");
+    }
+
+    @Test
     void findByEmailWithMemberRoles() {
         Member member = memberRepository.findByEmailWithMemberRoles("abc@naver.com").get();
 
