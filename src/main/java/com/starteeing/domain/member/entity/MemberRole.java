@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"memberRoleEnum"})
+@EqualsAndHashCode(exclude = {"id", "member"})
 @Builder
 @Entity
 public class MemberRole {

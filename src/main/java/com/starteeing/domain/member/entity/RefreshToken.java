@@ -23,7 +23,7 @@ public class RefreshToken extends BaseTimeEntity {
     @Column(nullable = false)
     private String refreshToken;
 
-    public String getRefreshToken() {
+    public String getRefreshTokenValue() {
         return refreshToken;
     }
 
