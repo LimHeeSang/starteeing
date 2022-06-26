@@ -1,19 +1,35 @@
 package com.starteeing.domain.member.service;
 
+import com.starteeing.domain.member.dto.MemberLoginRequestDto;
+import com.starteeing.domain.member.dto.MemberLoginResponseDto;
+import com.starteeing.domain.member.dto.MemberReissueRequestDto;
 import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
+import com.starteeing.domain.member.entity.MemberRoleEnum;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.repository.MemberRepository;
 import com.starteeing.domain.member.repository.UserMemberRepository;
-import org.assertj.core.api.Assertions;
+import com.starteeing.golbal.security.JwtAuthenticationProvider;
+import com.starteeing.golbal.security.JwtProvider;
+import com.starteeing.golbal.security.UserDetailsServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -25,23 +41,38 @@ class UserMemberServiceTest {
     UserMemberRepository userMemberRepository;
     @Mock
     MemberRepository memberRepository;
+
     @Mock
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Mock
+    JwtProvider jwtProvider;
+    @Mock
+    UserDetailsServiceImpl userDetailsService;
+    @Mock
+    JwtAuthenticationProvider jwtAuthenticationProvider;
+
     @InjectMocks
     UserMemberService userMemberService;
 
+    UserMember savedMember;
+
+    @BeforeEach
+    void setUp() {
+        savedMember = createUserMemberRequestDto().toEntity(new BCryptPasswordEncoder());
+        savedMember.saveRefreshToken("test_refresh_token");
+
+        Long fakeMemberId = 1L;
+        ReflectionTestUtils.setField(savedMember, "id", fakeMemberId);
+    }
+
     @Test
     void 회원가입() {
-        UserMember saveMember = createUserMemberRequestDto().toEntity(new BCryptPasswordEncoder());
-        Long fakeMemberId = 1L;
-        ReflectionTestUtils.setField(saveMember, "id", fakeMemberId);
-
-        given(userMemberRepository.save(any())).willReturn(saveMember);
+        given(userMemberRepository.save(any())).willReturn(savedMember);
 
         UserMemberSignupRequestDto memberRequestDto = createUserMemberRequestDto();
         Long savedId = userMemberService.memberJoin(memberRequestDto);
 
-        Assertions.assertThat(savedId).isEqualTo(fakeMemberId);
+        assertThat(savedId).isEqualTo(1L);
     }
 
     @Test
@@ -51,6 +82,47 @@ class UserMemberServiceTest {
         assertThatThrownBy(
                 () -> userMemberService.memberJoin(createUserMemberRequestDto())
         ).isInstanceOf(ExistMemberException.class);
+    }
+
+    @Test
+    void 로그인() throws Exception {
+        // TODO: 2022-06-25 작성 보류..
+
+        MemberLoginResponseDto loginResponseDto = userMemberService.login(MemberLoginRequestDto.builder()
+                .email("abc@naver.com")
+                .password("1234")
+                .build());
+
+        assertThat(loginResponseDto.getAccessToken()).isEqualTo("test_access_toke");
+        assertThat(loginResponseDto.getRefreshToken()).isEqualTo("test_refresh_token");
+    }
+
+    private List<GrantedAuthority> mapToAuthorities(List<MemberRoleEnum> memberRoleEnums) {
+        return memberRoleEnums.stream()
+                .map(memberRole -> new SimpleGrantedAuthority(memberRole.toString()))
+                .collect(Collectors.toList());
+    }
+
+    @Test
+    void 토큰_재발급() {
+        given(jwtProvider.validateToken(any())).willReturn(true);
+        given(jwtProvider.getAuthentication(any())).willReturn(new UsernamePasswordAuthenticationToken(savedMember.getEmail(),
+                savedMember.getPassword(),
+                mapToAuthorities(Arrays.asList(MemberRoleEnum.ROLE_USER))));
+
+        given(memberRepository.findByEmailWithRefreshToken(any())).willReturn(Optional.ofNullable(savedMember));
+        given(jwtProvider.createToken(any())).willReturn(MemberLoginResponseDto.builder()
+                .accessToken("new_test_access_toke")
+                .refreshToken("new_test_refresh_token")
+                .build());
+
+        MemberLoginResponseDto loginResponseDto = userMemberService.reissue(MemberReissueRequestDto.builder()
+                .accessToken("test_access_toke")
+                .refreshToken("test_refresh_token")
+                .build());
+
+        assertThat(loginResponseDto.getAccessToken()).isEqualTo("new_test_access_toke");
+        assertThat(loginResponseDto.getRefreshToken()).isEqualTo("new_test_refresh_token");
     }
 
     private UserMemberSignupRequestDto createUserMemberRequestDto() {
