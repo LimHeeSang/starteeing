@@ -1,6 +1,7 @@
 package com.starteeing.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starteeing.domain.member.dto.MemberLoginResponseDto;
 import com.starteeing.domain.member.dto.UserMemberSignupRequestDto;
 import com.starteeing.domain.member.exception.ExistMemberException;
 import com.starteeing.domain.member.exception.MemberExEnum;
@@ -8,6 +9,7 @@ import com.starteeing.domain.member.service.UserMemberService;
 import com.starteeing.golbal.exception.common.CommonExEnum;
 import com.starteeing.golbal.response.ResponseService;
 import com.starteeing.golbal.response.result.CommonResult;
+import com.starteeing.golbal.response.result.SingleResult;
 import com.starteeing.golbal.security.JwtAuthenticationFilter;
 import com.starteeing.golbal.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
@@ -94,7 +96,59 @@ class UserMemberControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.INVALID_BINGING_VALUE.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.INVALID_BINGING_VALUE.getMessage())));
+    }
+
+    @Test
+    void login() throws Exception {
+        // TODO: 2022-06-27 작성 보류... 
+        String body = mapper.writeValueAsString(createUserMemberRequestDto());
+
+        given(userMemberService.login(any()))
+                .willReturn(MemberLoginResponseDto.builder()
+                        .accessToken("test_access_token")
+                        .refreshToken("test_refresh_token")
+                        .build());
+        given(responseService.getSingleResult(any()))
+                .willReturn(SingleResult.createSingleResult(MemberLoginResponseDto.builder()
+                        .accessToken("test_access_token")
+                        .refreshToken("test_refresh_token")
+                        .build()));
+
+        mockMvc.perform(post("/login")
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())));
+    }
+
+    @Test
+    void reissue() throws Exception {
+        String body = mapper.writeValueAsString(createUserMemberRequestDto());
+
+        given(userMemberService.reissue(any()))
+                .willReturn(MemberLoginResponseDto.builder().build());
+        given(responseService.getSingleResult(any()))
+                .willReturn(SingleResult.createSingleResult(MemberLoginResponseDto.builder()
+                        .accessToken("new_test_access_token")
+                        .refreshToken("new_test_refresh_token")
+                        .build()));
+
+        mockMvc.perform(post("/reissue")
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.data.accessToken", is("new_test_access_token")))
+                .andExpect(jsonPath("$.data.refreshToken", is("new_test_refresh_token")));
     }
 
     private UserMemberSignupRequestDto createUserMemberRequestDto() {
@@ -115,7 +169,6 @@ class UserMemberControllerTest {
     private UserMemberSignupRequestDto createWrongUserMemberDto() {
         return UserMemberSignupRequestDto.builder()
                 .name("qweqwe09042")
-                .email("")
                 .password("1234")
                 .nickname("")
                 .birthOfDate("1998-09-04")
