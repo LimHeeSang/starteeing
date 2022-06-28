@@ -37,4 +37,12 @@ class MemberExEnumTest {
         assertThat(memberExEnum.getCode()).isEqualTo("M0004");
         assertThat(memberExEnum.getMessage()).isEqualTo("토큰이 존재하지 않습니다.");
     }
+
+    @Test
+    void not_equal_password() {
+        MemberExEnum memberExEnum = MemberExEnum.NOT_EQUAL_PASSWORD;
+
+        assertThat(memberExEnum.getCode()).isEqualTo("M0005");
+        assertThat(memberExEnum.getMessage()).isEqualTo("패스워드가 일치하지 않습니다.");
+    }
 }
