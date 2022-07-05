@@ -1,6 +1,8 @@
 package com.starteeing.domain.member.entity;
 
 import com.starteeing.domain.common.BaseTimeEntity;
+import com.starteeing.golbal.oauth.ProviderEnum;
+import com.starteeing.golbal.oauth.userinfo.OAuth2UserInfo;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,14 +27,21 @@ public abstract class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(unique = true)
+    private String userId;
+
     @Column(nullable = false)
     private String name;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
+
+    private String imageProfileUrl;
+
+    @Enumerated(value = EnumType.STRING)
+    private ProviderEnum providerEnum;
 
     @Column(nullable = false)
     @Builder.Default
@@ -60,5 +69,15 @@ public abstract class Member extends BaseTimeEntity {
 
     public Optional<RefreshToken> getRefreshToken() {
         return Optional.ofNullable(refreshToken);
+    }
+
+    public void updateOAuth2UserInfo(OAuth2UserInfo oAuth2UserInfo) {
+        if (!name.equals(oAuth2UserInfo.getName())) {
+            name = oAuth2UserInfo.getName();
+        }
+        if (!imageProfileUrl.equals(oAuth2UserInfo.getImageUrl())) {
+            imageProfileUrl = oAuth2UserInfo.getImageUrl();
+
+        }
     }
 }
