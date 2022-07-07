@@ -24,7 +24,7 @@ public class JwtProvider {
 
     private static final String ISSUER = "starting";
     private static final Long ACCESS_TOKEN_VALID_MILLISECOND = 1000 * 60 * 30L;
-    private static final Long REFRESH_TOKEN_VALID_MILLISECOND = 1000 * 60 * 60 * 24 * 7L;
+    public static final Long REFRESH_TOKEN_VALID_MILLISECOND = 1000 * 60 * 60 * 24 * 7L;
     private static final String CLAIM_NAME_ROLES = "roles";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
