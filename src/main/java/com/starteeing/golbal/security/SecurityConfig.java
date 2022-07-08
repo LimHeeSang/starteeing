@@ -1,6 +1,11 @@
 package com.starteeing.golbal.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starteeing.golbal.oauth.CorsProperties;
+import com.starteeing.golbal.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.starteeing.golbal.oauth.OAuth2UserServiceImpl;
+import com.starteeing.golbal.oauth.handler.OAuth2AuthenticationFailureHandler;
+import com.starteeing.golbal.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.starteeing.golbal.response.ResponseService;
 import com.starteeing.golbal.security.handler.JwtAccessDeniedHandler;
 import com.starteeing.golbal.security.handler.JwtAuthenticationEntryPoint;
@@ -14,6 +19,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -26,26 +35,48 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
 
+    private final OAuth2UserServiceImpl oAuth2UserService;
+    private final OAuth2AuthorizationRequestBasedOnCookieRepository OAuth2AuthorizationRequestBasedOnCookieRepository;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    private final CorsProperties corsProperties;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .httpBasic().disable()
+        http.cors()
+                .and()
                 .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint())
-                .accessDeniedHandler(jwtAccessDeniedHandler())
+                .httpBasic().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-                .and()
-                .authorizeRequests()
+        http.authorizeRequests()
+                .antMatchers("/oauth2/**", "/auth/**", "/login/**", "/oauth/**").permitAll()
                 .antMatchers("/login", "/signup").permitAll()
+                .antMatchers("/login/oauth2/code/*").permitAll()
                 .antMatchers("/test").hasRole("ADMIN")
-                .anyRequest().hasRole("USER")
+                .anyRequest().hasRole("USER");
 
+        http.formLogin().disable()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(OAuth2AuthorizationRequestBasedOnCookieRepository)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .redirectionEndpoint()
+                .baseUri("/*/oauth2/code/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
+
+        http.exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint())
+                .accessDeniedHandler(jwtAccessDeniedHandler());
+
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     /**
@@ -61,6 +92,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(jwtAuthenticationProvider());
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtProvider);
     }
 
     @Bean
@@ -81,5 +117,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAccessDeniedHandler jwtAccessDeniedHandler() {
         return new JwtAccessDeniedHandler(responseService, objectMapper);
+    }
+
+    /*
+     * Cors 설정
+     * */
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
+
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
+        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
+        corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
+        corsConfig.setAllowCredentials(true);
+        corsConfig.setMaxAge(corsConfig.getMaxAge());
+
+        corsConfigSource.registerCorsConfiguration("/**", corsConfig);
+        return corsConfigSource;
     }
 }
