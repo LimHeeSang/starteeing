@@ -1,6 +1,8 @@
 package com.starteeing.domain.friends.repository;
 
 import com.starteeing.domain.friends.entity.Friend;
+import com.starteeing.domain.friends.entity.FriendStatus;
+import com.starteeing.domain.member.entity.Member;
 import com.starteeing.domain.member.entity.UserMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,4 +16,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     boolean existsByUserMemberAndFriendId(UserMember userMember, Long friendId);
 
     List<Friend> findAllByUserMember(UserMember userMember);
+
+    List<Friend> findAllByUserMemberAndFriendsStatus(Member member, FriendStatus friendStatus);
 }
