@@ -2,6 +2,7 @@ package com.starteeing.domain.friends.service;
 
 import com.starteeing.domain.friends.dto.FriendResponseDto;
 import com.starteeing.domain.friends.entity.Friend;
+import com.starteeing.domain.friends.entity.FriendStatus;
 import com.starteeing.domain.friends.repository.FriendRepository;
 import com.starteeing.domain.member.entity.UserMember;
 import com.starteeing.domain.member.repository.UserMemberRepository;
@@ -47,7 +48,7 @@ public class FriendService {
     }
 
     /**
-     * 친구수락
+     * 친구 수락
      */
     public void acceptFriend(Long toMemberId, String fromNickname) {
         UserMember toMember = getUserMemberForId(toMemberId);
@@ -65,7 +66,7 @@ public class FriendService {
     }
 
     /**
-     * 친구요청거절
+     * 친구 요청 거절
      */
     public void rejectFriend(Long toMemberId, String fromNickname) {
         UserMember toMember = getUserMemberForId(toMemberId);
@@ -83,7 +84,7 @@ public class FriendService {
     }
 
     /**
-     * 친구삭제
+     * 친구 삭제
      */
     public void deleteFriend(Long toMemberId, String fromNickname) {
         UserMember toMember = getUserMemberForId(toMemberId);
@@ -101,7 +102,7 @@ public class FriendService {
     }
 
     /**
-     * 친구리스트 조회
+     * 친구 리스트 조회
      */
     @Transactional(readOnly = true)
     public List<FriendResponseDto> getFriendsList(Long memberId) {
@@ -109,16 +110,31 @@ public class FriendService {
         List<Friend> friends = friendRepository.findAllByUserMember(userMember);
 
         List<String> nicknames = userMemberRepository.findNicknamesByIdList(mapFriendsToIdList(friends));
-        List<FriendResponseDto> friendResponseDtos = mapFriendsToFriendDtos(friends);
+        List<FriendResponseDto> friendResponseDtos = mapFriendsToFriendDtos(friends, nicknames);
 
-        addNicknames(friendResponseDtos, nicknames);
         return friendResponseDtos;
     }
 
-    private List<FriendResponseDto> mapFriendsToFriendDtos(List<Friend> friends) {
+    /**
+     * 친구로 등록된 친구리스트 조회
+     */
+    @Transactional(readOnly = true)
+    public List<FriendResponseDto> getAcceptFriendsList(Long memberId) {
+        UserMember findMember = getUserMemberForId(memberId);
+        List<Friend> friends = friendRepository.findAllByUserMemberAndFriendsStatus(findMember, FriendStatus.ACCEPT);
+
+        List<String> nicknames = userMemberRepository.findNicknamesByIdList(mapFriendsToIdList(friends));
+        List<FriendResponseDto> friendResponseDtos = mapFriendsToFriendDtos(friends, nicknames);
+
+        return friendResponseDtos;
+    }
+
+    private List<FriendResponseDto> mapFriendsToFriendDtos(List<Friend> friends, List<String> nicknames) {
         List<FriendResponseDto> friendResponseDtos = friends.stream()
                 .map(FriendResponseDto::new)
                 .collect(Collectors.toList());
+
+        addNicknames(friendResponseDtos, nicknames);
         return friendResponseDtos;
     }
 
