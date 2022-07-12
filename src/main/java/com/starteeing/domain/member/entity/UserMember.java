@@ -2,6 +2,7 @@ package com.starteeing.domain.member.entity;
 
 import com.starteeing.domain.friends.entity.Friend;
 import com.starteeing.domain.friends.entity.FriendStatus;
+import com.starteeing.domain.team.entity.TeamUserMember;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -18,6 +19,8 @@ public class UserMember extends Member {
 
     @Column(unique = true, nullable = false)
     private String nickName;
+
+    private String gender;
 
     @Column(nullable = false)
     private LocalDate birthOfDate;
@@ -37,6 +40,9 @@ public class UserMember extends Member {
     @Embedded
     private SchoolInfo schoolInfo;
 
+    @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL)
+    private List<TeamUserMember> teams = new ArrayList<>();
+
     {
         MemberRole memberRole = MemberRole.builder().memberRoleEnum(MemberRoleEnum.ROLE_USER).member(this).build();
         memberRoles.add(memberRole);
@@ -44,6 +50,10 @@ public class UserMember extends Member {
 
     public List<Friend> getFriends() {
         return friends;
+    }
+
+    public void addTeam(TeamUserMember teamUserMember) {
+        teams.add(teamUserMember);
     }
 
     public void requestFriend(UserMember userMember) {
