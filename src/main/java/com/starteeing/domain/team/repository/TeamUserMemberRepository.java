@@ -16,7 +16,4 @@ public interface TeamUserMemberRepository extends JpaRepository<TeamUserMember, 
 
     @Query("select tm from TeamUserMember tm left join fetch tm.team where tm.userMember =: useMember")
     List<TeamUserMember> findAllByUserMemberWithTeam(@Param("userMember") UserMember userMember);
-
-    //test 해보고 되면 이 메소드로 리팩토링하기
-    Optional<TeamUserMember> findByTeamAAndUserMember(Long teamId, Long memberId);
 }
