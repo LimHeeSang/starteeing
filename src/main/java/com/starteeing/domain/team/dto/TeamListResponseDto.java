@@ -1,6 +1,7 @@
 package com.starteeing.domain.team.dto;
 
 import com.starteeing.domain.team.entity.TeamUserMember;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import java.util.List;
@@ -17,14 +18,12 @@ public class TeamListResponseDto {
 
     private List<TeamResponseDto> mapToTeamResponseDtoList(List<TeamUserMember> teamUserMembers) {
         return teamUserMembers.stream()
-                .map(teamUserMember -> TeamResponseDto.builder()
-                        .teamId(teamUserMember.getTeam().getId())
-                        .teamName(teamUserMember.getTeam().getName())
-                        .build()
+                .map(teamUserMember ->
+                        new TeamResponseDto(teamUserMember.getTeam().getId(), teamUserMember.getTeam().getName())
                 ).collect(Collectors.toList());
     }
 
-    @Builder
+    @AllArgsConstructor
     private class TeamResponseDto {
         private Long teamId;
 
