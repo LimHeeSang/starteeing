@@ -1,6 +1,6 @@
 package com.starting.domain.friends.service;
 
-import com.starting.domain.friends.dto.FriendResponseDto;
+import com.starting.domain.friends.dto.FriendListResponseDto;
 import com.starting.domain.friends.entity.Friend;
 import com.starting.domain.friends.entity.FriendStatus;
 import com.starting.domain.friends.repository.FriendRepository;
@@ -188,12 +188,12 @@ class FriendServiceTest {
         given(userMemberRepository.findNicknamesByIdList(mapFriendsToIdList(member1.getFriends())))
                 .willReturn(Arrays.asList("userB", "userC"));
 
-        List<FriendResponseDto> friendsList = friendService.getFriendsList(member1.getId());
+        List<FriendListResponseDto.FriendResponseDto> friendsList = friendService.getFriendsList(member1.getId()).getResult();
 
         List<Long> ids = Arrays.asList(member2.getId(), member3.getId());
         List<String> nicknames = Arrays.asList("userB", "userC");
         int idx = 0;
-        for (FriendResponseDto friendResponseDto : friendsList) {
+        for (FriendListResponseDto.FriendResponseDto friendResponseDto : friendsList) {
             assertThat(friendResponseDto.getFriendId()).isEqualTo(ids.get(idx));
             assertThat(friendResponseDto.getFriendStatus()).isEqualTo(FriendStatus.ACCEPT);
             assertThat(friendResponseDto.getNickName()).isEqualTo(nicknames.get(idx++));

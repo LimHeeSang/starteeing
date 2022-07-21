@@ -1,6 +1,6 @@
 package com.starting.domain.friends.controller;
 
-import com.starting.domain.friends.dto.FriendResponseDto;
+import com.starting.domain.friends.dto.FriendListResponseDto;
 import com.starting.domain.friends.service.FriendService;
 import com.starting.golbal.response.ResponseService;
 import com.starting.golbal.response.result.CommonResult;
@@ -8,8 +8,6 @@ import com.starting.golbal.response.result.SingleResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,8 +21,8 @@ public class FriendController {
      */
     @GetMapping("/friend/all/{memberId}")
     public ResponseEntity<SingleResult> getFriendsList(@PathVariable Long memberId) {
-        List<FriendResponseDto> friends = friendService.getFriendsList(memberId);
-        return ResponseEntity.ok(responseService.getSingleResult(friends));
+        FriendListResponseDto friendsList = friendService.getFriendsList(memberId);
+        return ResponseEntity.ok(responseService.getSingleResult(friendsList));
     }
 
     /**
@@ -32,8 +30,8 @@ public class FriendController {
      */
     @GetMapping("/friend/all/accept/{memberId}")
     public ResponseEntity<SingleResult> getAcceptFriendsList(@PathVariable Long memberId) {
-        List<FriendResponseDto> friends = friendService.getAcceptFriendsList(memberId);
-        return ResponseEntity.ok(responseService.getSingleResult(friends));
+        FriendListResponseDto friendList = friendService.getAcceptFriendsList(memberId);
+        return ResponseEntity.ok(responseService.getSingleResult(friendList));
     }
 
     /**
