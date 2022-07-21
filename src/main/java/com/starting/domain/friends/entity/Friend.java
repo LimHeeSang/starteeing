@@ -4,6 +4,7 @@ import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.member.entity.UserMember;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
+@Getter
 @Entity
 public class Friend extends BaseTimeEntity {
 
@@ -30,18 +32,6 @@ public class Friend extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FriendStatus friendsStatus;
-
-    public Long getFriendId() {
-        return friendId;
-    }
-
-    public FriendStatus getFriendsStatus() {
-        return friendsStatus;
-    }
-
-    public UserMember getUserMember() {
-        return userMember;
-    }
 
     public boolean isStatusResponse() {
         return friendsStatus == FriendStatus.RESPONSE;
