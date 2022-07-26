@@ -122,7 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /*
      * Cors 설정
      * */
-    @Bean
+    /*@Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
 
@@ -135,5 +135,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         corsConfigSource.registerCorsConfiguration("/**", corsConfig);
         return corsConfigSource;
-    }
+    }*/
+
+
 }
