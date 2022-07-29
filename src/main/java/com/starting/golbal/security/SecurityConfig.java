@@ -43,11 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-    private final CorsProperties corsProperties;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
+        http.cors().configurationSource(corsConfigurationSource())
                 .and()
                 .csrf().disable()
                 .httpBasic().disable()
