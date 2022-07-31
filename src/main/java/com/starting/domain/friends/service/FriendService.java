@@ -3,15 +3,17 @@ package com.starting.domain.friends.service;
 import com.starting.domain.friends.dto.FriendListResponseDto;
 import com.starting.domain.friends.entity.Friend;
 import com.starting.domain.friends.entity.FriendStatus;
+import com.starting.domain.friends.exception.NotExistFriendException;
+import com.starting.domain.friends.exception.NotExistPreRequest;
 import com.starting.domain.friends.repository.FriendRepository;
 import com.starting.domain.member.entity.UserMember;
+import com.starting.domain.member.exception.NotExistMemberException;
 import com.starting.domain.member.repository.UserMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -32,10 +34,10 @@ public class FriendService {
         //이전에 요청을 보냈던적이 있었던 경우
         if (friendRepository.existsByUserMemberAndFriendId(toMember, fromMember.getId())) {
             Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
-                    () -> new NoSuchElementException("찾으려는 친구가 없습니다.")
+                    NotExistFriendException::new
             );
             Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
-                    () -> new NoSuchElementException("찾으려는 친구가 없습니다.")
+                    NotExistFriendException::new
             );
 
             toFriend.reRequestFriend();
@@ -55,10 +57,10 @@ public class FriendService {
         UserMember fromMember = getUserMemberForNickname(fromNickname);
 
         Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
-                () -> new NoSuchElementException("이전 요청이 없습니다.")
+                NotExistPreRequest::new
         );
         Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
-                () -> new NoSuchElementException("이전 요청이 없습니다.")
+                NotExistPreRequest::new
         );
 
         toFriend.acceptFriend();
@@ -73,10 +75,10 @@ public class FriendService {
         UserMember fromMember = getUserMemberForNickname(fromNickname);
 
         Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
-                () -> new NoSuchElementException("이전 요청이 없습니다.")
+                NotExistPreRequest::new
         );
         Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
-                () -> new NoSuchElementException("이전 요청이 없습니다.")
+                NotExistPreRequest::new
         );
 
         toFriend.rejectFriend();
@@ -91,10 +93,10 @@ public class FriendService {
         UserMember fromMember = getUserMemberForNickname(fromNickname);
 
         Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
-                () -> new NoSuchElementException("이전 요청이 없습니다.")
+                NotExistPreRequest::new
         );
         Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
-                () -> new NoSuchElementException("이전 요청이 없습니다.")
+                NotExistPreRequest::new
         );
 
         toFriend.deleteFriend();
@@ -142,14 +144,10 @@ public class FriendService {
     }
 
     private UserMember getUserMemberForNickname(String fromNickname) {
-        return userMemberRepository.findByNickName(fromNickname).orElseThrow(
-                () -> new NoSuchElementException("찾으려는 멤버가 없습니다.")
-        );
+        return userMemberRepository.findByNickName(fromNickname).orElseThrow(NotExistMemberException::new);
     }
 
     private UserMember getUserMemberForId(Long toMemberId) {
-        return userMemberRepository.findById(toMemberId).orElseThrow(
-                () -> new NoSuchElementException("찾으려는 멤버가 없습니다.")
-        );
+        return userMemberRepository.findById(toMemberId).orElseThrow(NotExistMemberException::new);
     }
 }
