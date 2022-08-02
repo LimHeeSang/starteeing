@@ -45,13 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
                 .configurationSource(corsConfigurationSource())
-                /*.configurationSource(request -> {
-                    final CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
-                    configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
-                    configuration.setAllowedHeaders(List.of("*"));
-                    return configuration;
-                })*/
                 .and()
                 .csrf().disable()
                 .httpBasic().disable()
