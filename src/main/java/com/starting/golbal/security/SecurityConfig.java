@@ -20,9 +20,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
-import java.util.List;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -43,13 +44,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
-                .configurationSource(request -> {
+                .configurationSource(corsConfigurationSource())
+                /*.configurationSource(request -> {
                     final CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
                     configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
                     configuration.setAllowedHeaders(List.of("*"));
                     return configuration;
-                })
+                })*/
                 .and()
                 .csrf().disable()
                 .httpBasic().disable()
@@ -125,10 +127,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAccessDeniedHandler(responseService, objectMapper);
     }
 
-    /*@Bean
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://13.209.146.204:8080"));
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
@@ -136,5 +138,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }*/
+    }
 }
