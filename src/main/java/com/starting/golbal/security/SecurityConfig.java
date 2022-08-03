@@ -10,6 +10,7 @@ import com.starting.golbal.security.handler.JwtAccessDeniedHandler;
 import com.starting.golbal.security.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
+                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/oauth2/**", "/auth/**", "/login/**", "/oauth/**").permitAll()
                 .antMatchers("/login", "/signup").permitAll()
                 .antMatchers("/login/oauth2/code/*").permitAll()
