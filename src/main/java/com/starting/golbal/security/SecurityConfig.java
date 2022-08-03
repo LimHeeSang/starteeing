@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Collections;
+import java.util.List;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -44,9 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .configurationSource(request -> {
                     final CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(Collections.singletonList("http://13.209.146.204:8080"));
-                    configuration.addAllowedHeader("*");
-                    configuration.addAllowedMethod("*");
-                    configuration.setAllowCredentials(true);
+                    configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
+                    configuration.setAllowedHeaders(List.of("*"));
                     return configuration;
                 })
                 .and()
