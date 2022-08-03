@@ -17,6 +17,9 @@ import java.util.List;
 @Entity
 public class UserMember extends Member {
 
+    public static final String MALE_TYPE = "M";
+    public static final String FEMALE_TYPE = "F";
+
     @Column(unique = true, nullable = false)
     private String nickName;
 
@@ -75,5 +78,17 @@ public class UserMember extends Member {
                 .build();
 
         userMember.friends.add(friend2);
+    }
+
+    public boolean isMale() {
+        return gender.equals(MALE_TYPE);
+    }
+
+    public boolean isFemale() {
+        return gender.equals(FEMALE_TYPE);
+    }
+
+    public String getGender() {
+        return gender;
     }
 }
