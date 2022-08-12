@@ -29,30 +29,19 @@ public class Box extends BaseTimeEntity {
         tickets.add(ticket);
     }
 
-    public void pullTicket(Ticket ticket) {
-        tickets.remove(ticket);
-    }
-
     public Ticket drawRandomTicket(Team team) {
-        // TODO: 2022-08-12 셔플 없애고 티켓 진짜 삭제로 로직 바꾸고 상대팀도 매칭기록 기록하기
-        //성별에 관한 티켓 필터링 리팩토링
-        List<Ticket> filterTicket = tickets.stream()
-                .filter(ticket -> team.getMatchedTeamId().contains(ticket.getId())
-                && ticket.getGenderEnum().equals(team.getTeamGender()))
-                .collect(Collectors.toList());
+        List<Ticket> filterTickets = filterGenderTickets(team);
 
-        if (tickets.isEmpty() && filterTicket.isEmpty()) {
+        if (tickets.isEmpty() && filterTickets.isEmpty()) {
             throw new NotExistTicketException();
         }
 
-        Ticket drawTicket = filterTicket.get(RANDOM_TICKET_INDEX);
-        team.addMatchedTeamId(drawTicket.getId());
-        //상대팀도 매칭기록
-
-        return drawTicket;
+        return filterTickets.remove(RANDOM_TICKET_INDEX);
     }
 
-    public boolean isExistTicket(Ticket ticket) {
-        return tickets.contains(ticket);
+    private List<Ticket> filterGenderTickets(Team team) {
+        return tickets.stream()
+                .filter(ticket -> ticket.getGenderEnum().equals(team.getTeamGender()))
+                .collect(Collectors.toList());
     }
 }
