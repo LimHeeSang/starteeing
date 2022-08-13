@@ -3,21 +3,28 @@ package com.starting.domain.meeting.service;
 import com.starting.domain.meeting.dto.TicketResponseDto;
 import com.starting.domain.meeting.entity.Box;
 import com.starting.domain.meeting.entity.BoxContainer;
+import com.starting.domain.meeting.entity.Match;
 import com.starting.domain.meeting.entity.Ticket;
 import com.starting.domain.meeting.exception.NotEqualGenderException;
+import com.starting.domain.meeting.repository.MatchRepository;
 import com.starting.domain.team.entity.Team;
 import com.starting.domain.team.exception.NotExistTeamException;
 import com.starting.domain.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class BoxService {
 
     private final TicketService ticketService;
     private final BoxContainer boxContainer;
     private final TeamRepository teamRepository;
+    private final MatchRepository matchRepository;
 
     /**
      * 티켓 넣기
@@ -26,16 +33,6 @@ public class BoxService {
         Ticket createdTicket = ticketService.createTicket(memberId, teamId);
         Box box = boxContainer.getBoxNum(createdTicket.getMemberCount());
         box.putTicket(createdTicket);
-    }
-
-    /**
-     * 티켓 꺼내기
-     */
-    public void pullTicket(Long ticketId) {
-        Ticket findTicket = ticketService.getTicket(ticketId);
-        Box box = boxContainer.getBoxNum(findTicket.getMemberCount());
-        box.pullTicket(findTicket);
-        ticketService.deleteTicket(findTicket);
     }
 
     /**
@@ -50,6 +47,13 @@ public class BoxService {
 
         Box box = boxContainer.getBoxNum(findTeam.getUserMemberCount());
         Ticket drawTicket = box.drawRandomTicket(findTeam);
+
+        createMatch(findTeam, drawTicket.getTeam());
         return TicketResponseDto.builder().ticket(drawTicket).build();
+    }
+
+    private void createMatch(Team findTeam, Team opposeTeam) {
+        Match createMatch = Match.builder().teams(List.of(findTeam, opposeTeam)).build();
+        matchRepository.save(createMatch);
     }
 }
