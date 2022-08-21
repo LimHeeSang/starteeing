@@ -1,6 +1,7 @@
 package com.starting.domain.team.entity;
 
 import com.starting.domain.meeting.entity.GenderEnum;
+import com.starting.domain.meeting.entity.TeamMatch;
 import com.starting.domain.meeting.exception.NotEqualGenderException;
 import com.starting.domain.member.entity.Member;
 import com.starting.domain.member.entity.UserMember;
@@ -28,11 +29,11 @@ public class Team {
 
     private Long score;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<TeamUserMember> members = new ArrayList<>();
 
-    @ElementCollection
-    private List<Long> matchedTeamId = new ArrayList<>();
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<TeamMatch> matches = new ArrayList<>();
 
     @Builder
     public Team(String teamName, List<Member> members) {
@@ -40,13 +41,11 @@ public class Team {
 
         List<TeamUserMember> teamUserMembers = members.stream()
                 .map(member -> TeamUserMember.builder()
-                .team(this)
-                .userMember((UserMember) member)
-                .build())
-                .collect(Collectors.toList());
+                        .team(this)
+                        .userMember((UserMember) member)
+                        .build()).collect(Collectors.toList());
 
-        teamUserMembers.stream()
-                .forEach(teamUserMember -> this.addUserMember(teamUserMember));
+        teamUserMembers.stream().forEach(this::addUserMember);
     }
 
     private void addUserMember(TeamUserMember teamUserMember) {
@@ -69,6 +68,10 @@ public class Team {
         addUserMember(teamUserMember);
     }
 
+    public void addTeamMatch(TeamMatch teamMatch) {
+        matches.add(teamMatch);
+    }
+
     public int getUserMemberCount() {
         return members.size();
     }
@@ -88,14 +91,6 @@ public class Team {
             return criterion;
         }
         throw new NotEqualGenderException();
-    }
-
-    public List<Long> getMatchedTeamId() {
-        return matchedTeamId;
-    }
-
-    public void addMatchedTeamId(Long teamId) {
-        matchedTeamId.add(teamId);
     }
 
     public GenderEnum getTeamGender() {
