@@ -1,5 +1,6 @@
 package com.starting.domain.team.entity;
 
+import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.member.entity.UserMember;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class TeamUserMember {
+public class TeamUserMember extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
