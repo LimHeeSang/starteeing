@@ -1,10 +1,8 @@
 package com.starting.domain.meeting.service;
 
-import com.starting.domain.meeting.dto.TicketResponseDto;
 import com.starting.domain.meeting.entity.Ticket;
 import com.starting.domain.meeting.exception.ExistTicketException;
 import com.starting.domain.meeting.exception.NotEqualGenderException;
-import com.starting.domain.meeting.exception.NotExistTicketException;
 import com.starting.domain.meeting.repository.TicketRepository;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.exception.NotExistMemberException;
@@ -13,8 +11,6 @@ import com.starting.domain.team.entity.Team;
 import com.starting.domain.team.exception.NotExistTeamException;
 import com.starting.domain.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,26 +42,5 @@ public class TicketService {
                 .team(findTeam)
                 .build();
         return ticketRepository.save(createTicket);
-    }
-
-    /**
-     * 티켓 삭제
-     */
-    public void deleteTicket(Ticket ticket) {
-        ticketRepository.delete(ticket);
-    }
-
-    /**
-     * 티켓 조회
-     */
-    public Ticket getTicket(Long ticketId) {
-        return ticketRepository.findById(ticketId).orElseThrow(NotExistTicketException::new);
-    }
-
-    /**
-     * 티켓 전체 조회(페이징)
-     */
-    public Page<TicketResponseDto> getTickets(Pageable pageable) {
-        return ticketRepository.findAll(pageable).map(TicketResponseDto::new);
     }
 }
