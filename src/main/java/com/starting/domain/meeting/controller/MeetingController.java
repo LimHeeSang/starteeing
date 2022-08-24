@@ -1,8 +1,9 @@
 package com.starting.domain.meeting.controller;
 
+import com.starting.domain.meeting.dto.MatchListResponseDto;
 import com.starting.domain.meeting.dto.TicketResponseDto;
 import com.starting.domain.meeting.service.BoxService;
-import com.starting.domain.meeting.service.TicketService;
+import com.starting.domain.meeting.service.MatchService;
 import com.starting.golbal.response.ResponseService;
 import com.starting.golbal.response.result.CommonResult;
 import com.starting.golbal.response.result.SingleResult;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeetingController {
 
     private final BoxService boxService;
-    private final TicketService ticketService;
+    private final MatchService matchService;
     private final ResponseService responseService;
 
     /**
@@ -29,15 +30,6 @@ public class MeetingController {
     @PostMapping("/ticket/put/{memberId}/{teamId}")
     public ResponseEntity<CommonResult> putTicket(@PathVariable Long memberId, @PathVariable Long teamId) {
         boxService.putTicket(memberId, teamId);
-        return ResponseEntity.ok(responseService.getSuccessResult());
-    }
-
-    /**
-     * 티켓 꺼내기 -> 서비스 바뀜에 따라 필요 없어짐
-     */
-    @PostMapping("/ticket/pull/{ticketId}")
-    public ResponseEntity<CommonResult> pullTicket(@PathVariable Long ticketId) {
-        boxService.pullTicket(ticketId);
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 
@@ -51,11 +43,11 @@ public class MeetingController {
     }
 
     /**
-     * 티켓 전체 조회(페이징) -> 매칭 정보 조회
+     * 매칭 정보 조회(페이징)
      */
     @GetMapping("/ticket")
     public ResponseEntity<SingleResult> getTickets(Pageable pageable) {
-        Page<TicketResponseDto> tickets = ticketService.getTickets(pageable);
-        return ResponseEntity.ok(responseService.getSingleResult(tickets));
+        Page<MatchListResponseDto> matches = matchService.getMatches(pageable);
+        return ResponseEntity.ok(responseService.getSingleResult(matches));
     }
 }
