@@ -2,21 +2,21 @@ package com.starting.domain.meeting.entity;
 
 import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.team.entity.Team;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Getter
-@SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class TeamMatch extends BaseTimeEntity {
+public class TeamMatches extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_match_id")
+    @Column(name = "team_matches_id")
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -24,12 +24,13 @@ public class TeamMatch extends BaseTimeEntity {
     private Team team;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_id")
-    private Match match;
+    @JoinColumn(name = "matches_id")
+    private Matches matches;
 
-    public TeamMatch(Team team, Match match) {
+    @Builder
+    public TeamMatches(Team team, Matches matches) {
         this.team = team;
-        this.match = match;
+        this.matches = matches;
         team.addTeamMatch(this);
     }
 }

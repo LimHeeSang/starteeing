@@ -1,7 +1,8 @@
 package com.starting.domain.team.entity;
 
+import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.meeting.entity.GenderEnum;
-import com.starting.domain.meeting.entity.TeamMatch;
+import com.starting.domain.meeting.entity.TeamMatches;
 import com.starting.domain.meeting.exception.NotEqualGenderException;
 import com.starting.domain.member.entity.Member;
 import com.starting.domain.member.entity.UserMember;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Team {
+public class Team extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class Team {
     private List<TeamUserMember> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private List<TeamMatch> matches = new ArrayList<>();
+    private List<TeamMatches> matches = new ArrayList<>();
 
     @Builder
     public Team(String teamName, List<Member> members) {
@@ -45,7 +46,7 @@ public class Team {
                         .userMember((UserMember) member)
                         .build()).collect(Collectors.toList());
 
-        teamUserMembers.stream().forEach(this::addUserMember);
+        teamUserMembers.forEach(this::addUserMember);
     }
 
     private void addUserMember(TeamUserMember teamUserMember) {
@@ -68,8 +69,8 @@ public class Team {
         addUserMember(teamUserMember);
     }
 
-    public void addTeamMatch(TeamMatch teamMatch) {
-        matches.add(teamMatch);
+    public void addTeamMatch(TeamMatches teamMatches) {
+        matches.add(teamMatches);
     }
 
     public int getUserMemberCount() {

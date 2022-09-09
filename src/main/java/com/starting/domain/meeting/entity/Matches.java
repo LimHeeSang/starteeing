@@ -15,32 +15,32 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Match extends BaseTimeEntity {
+public class Matches extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "match_id")
+    @Column(name = "matches_id")
     private Long id;
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
-    private List<TeamMatch> teams = new ArrayList<>();
+    @OneToMany(mappedBy = "matches", cascade = CascadeType.ALL)
+    private final List<TeamMatches> teams = new ArrayList<>();
 
     @Builder
-    Match(List<Team> teams) {
-        List<TeamMatch> teamMatches = teams.stream()
-                .map(team -> TeamMatch.builder()
+    public Matches(List<Team> teams) {
+        List<TeamMatches> teamMatches = teams.stream()
+                .map(team -> TeamMatches.builder()
                         .team(team)
-                        .match(this)
+                        .matches(this)
                         .build()).collect(Collectors.toList());
 
-        teamMatches.stream().forEach(this::addTeamMatch);
+        teamMatches.forEach(this::addTeamMatch);
     }
 
-    private void addTeamMatch(TeamMatch teamMatch) {
-        teams.add(teamMatch);
+    private void addTeamMatch(TeamMatches teamMatches) {
+        teams.add(teamMatches);
     }
 
     public List<Team> getTeams() {
-        return teams.stream().map(TeamMatch::getTeam).collect(Collectors.toList());
+        return teams.stream().map(TeamMatches::getTeam).collect(Collectors.toList());
     }
 }
