@@ -20,21 +20,18 @@ public class UserMember extends Member {
     public static final String MALE_TYPE = "M";
     public static final String FEMALE_TYPE = "F";
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String nickName;
 
     private String gender;
 
-    @Column(nullable = false)
     private LocalDate birthOfDate;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false)
     private String mbti;
 
-    @Column(nullable = false)
     private double temperature;
 
     @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL)
@@ -44,7 +41,7 @@ public class UserMember extends Member {
     private SchoolInfo schoolInfo;
 
     @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL)
-    private List<TeamUserMember> teams = new ArrayList<>();
+    private final List<TeamUserMember> teams = new ArrayList<>();
 
     {
         MemberRole memberRole = MemberRole.builder().memberRoleEnum(MemberRoleEnum.ROLE_USER).member(this).build();
@@ -63,7 +60,7 @@ public class UserMember extends Member {
         Friend friend = Friend.builder()
                 .friendId(userMember.getId())
                 .userMember(this)
-                .friendsStatus(FriendStatus.REQUEST)
+                .friendStatus(FriendStatus.REQUEST)
                 .build();
         friends.add(friend);
 
@@ -71,13 +68,13 @@ public class UserMember extends Member {
     }
 
     private void responseFriend(UserMember userMember) {
-        Friend friend2 = Friend.builder()
+        Friend friend = Friend.builder()
                 .friendId(this.getId())
                 .userMember(userMember)
-                .friendsStatus(FriendStatus.RESPONSE)
+                .friendStatus(FriendStatus.RESPONSE)
                 .build();
 
-        userMember.friends.add(friend2);
+        userMember.friends.add(friend);
     }
 
     public boolean isMale() {
