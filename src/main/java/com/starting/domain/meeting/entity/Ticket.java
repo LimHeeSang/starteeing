@@ -3,15 +3,15 @@ package com.starting.domain.meeting.entity;
 import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.team.entity.Team;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Getter
-@SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Ticket extends BaseTimeEntity {
 
@@ -37,6 +37,7 @@ public class Ticket extends BaseTimeEntity {
     @JoinColumn(name = "box_id")
     private Box box;
 
+    @Builder
     public Ticket(UserMember userMember, Team team) {
         this.userMember = userMember;
         this.team = team;
