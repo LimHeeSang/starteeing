@@ -27,17 +27,17 @@ public abstract class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String userId;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
     private String password;
 
+    @Column(nullable = false)
     private String imageProfileUrl;
 
     @Enumerated(value = EnumType.STRING)
