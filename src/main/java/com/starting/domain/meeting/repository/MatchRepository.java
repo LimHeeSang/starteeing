@@ -1,7 +1,7 @@
 package com.starting.domain.meeting.repository;
 
-import com.starting.domain.meeting.entity.Match;
+import com.starting.domain.meeting.entity.Matches;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MatchRepository extends JpaRepository<Match, Long> {
+public interface MatchRepository extends JpaRepository<Matches, Long> {
 }

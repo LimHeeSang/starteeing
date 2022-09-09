@@ -1,6 +1,6 @@
 package com.starting.domain.meeting.dto;
 
-import com.starting.domain.meeting.entity.Match;
+import com.starting.domain.meeting.entity.Matches;
 import com.starting.domain.team.entity.Team;
 
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ public class MatchListResponseDto {
 
     private List<List<MatchResponseDto>> result;
 
-    public MatchListResponseDto(Match match) {
+    public MatchListResponseDto(Matches matches) {
         result = new ArrayList<>();
-        List<MatchResponseDto> matchResponseDtos = match.getTeams().stream().map(MatchResponseDto::new).collect(Collectors.toList());
+        List<MatchResponseDto> matchResponseDtos = matches.getTeams().stream().map(MatchResponseDto::new).collect(Collectors.toList());
         result.add(matchResponseDtos);
     }
 
