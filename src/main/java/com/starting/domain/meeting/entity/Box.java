@@ -3,6 +3,7 @@ package com.starting.domain.meeting.entity;
 import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.meeting.exception.NotExistTicketException;
 import com.starting.domain.team.entity.Team;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Box extends BaseTimeEntity {
 
@@ -23,7 +24,7 @@ public class Box extends BaseTimeEntity {
     private Long id;
 
     @OneToMany(mappedBy = "box", cascade = CascadeType.ALL)
-    private List<Ticket> tickets = new LinkedList<>();
+    private final List<Ticket> tickets = new LinkedList<>();
 
     public void putTicket(Ticket ticket) {
         tickets.add(ticket);
