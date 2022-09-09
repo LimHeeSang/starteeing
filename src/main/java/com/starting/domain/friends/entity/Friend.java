@@ -3,16 +3,13 @@ package com.starting.domain.friends.entity;
 import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.member.entity.UserMember;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@SuperBuilder
 @Getter
 @Entity
 public class Friend extends BaseTimeEntity {
@@ -31,38 +28,45 @@ public class Friend extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FriendStatus friendsStatus;
+    private FriendStatus friendStatus;
+
+    @Builder
+    public Friend(UserMember userMember, Long friendId, FriendStatus friendStatus) {
+        this.userMember = userMember;
+        this.friendId = friendId;
+        this.friendStatus = friendStatus;
+    }
 
     public boolean isStatusResponse() {
-        return friendsStatus == FriendStatus.RESPONSE;
+        return friendStatus == FriendStatus.RESPONSE;
     }
 
     private boolean isStatusAccept() {
-        return friendsStatus == FriendStatus.ACCEPT;
+        return friendStatus == FriendStatus.ACCEPT;
     }
 
     private boolean isStatusRequest() {
-        return friendsStatus == FriendStatus.REQUEST;
+        return friendStatus == FriendStatus.REQUEST;
     }
 
     private void changeStatusToAccept() {
-        friendsStatus = FriendStatus.ACCEPT;
+        friendStatus = FriendStatus.ACCEPT;
     }
 
     private void changeStatusToReject() {
-        friendsStatus = FriendStatus.REJECT;
+        friendStatus = FriendStatus.REJECT;
     }
 
     private void changeStatusToRequest() {
-        friendsStatus = FriendStatus.REQUEST;
+        friendStatus = FriendStatus.REQUEST;
     }
 
     private void changeStatusToResponse() {
-        friendsStatus = FriendStatus.RESPONSE;
+        friendStatus = FriendStatus.RESPONSE;
     }
 
     private void changeStatusToDelete() {
-        friendsStatus = FriendStatus.DELETE;
+        friendStatus = FriendStatus.DELETE;
     }
 
     public void reRequestFriend() {
