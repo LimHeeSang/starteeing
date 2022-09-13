@@ -1,6 +1,7 @@
 package com.starting.domain.meeting.entity;
 
 import com.starting.domain.common.BaseTimeEntity;
+import com.starting.domain.member.entity.GenderEnum;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.team.entity.Team;
 import lombok.AccessLevel;
