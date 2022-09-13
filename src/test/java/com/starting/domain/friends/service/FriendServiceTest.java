@@ -69,10 +69,10 @@ class FriendServiceTest {
         Friend friend2 = member2.getFriends().get(0);
 
         assertThat(friend1.getFriendId()).isEqualTo(member2.getId());
-        assertThat(friend1.getFriendsStatus()).isEqualTo(FriendStatus.REQUEST);
+        assertThat(friend1.getFriendStatus()).isEqualTo(FriendStatus.REQUEST);
 
         assertThat(friend2.getFriendId()).isEqualTo(member1.getId());
-        assertThat(friend2.getFriendsStatus()).isEqualTo(FriendStatus.RESPONSE);
+        assertThat(friend2.getFriendStatus()).isEqualTo(FriendStatus.RESPONSE);
     }
 
     @Test
@@ -95,10 +95,10 @@ class FriendServiceTest {
         Friend friend2 = member2.getFriends().get(0);
 
         assertThat(friend1.getFriendId()).isEqualTo(member2.getId());
-        assertThat(friend1.getFriendsStatus()).isEqualTo(FriendStatus.REQUEST);
+        assertThat(friend1.getFriendStatus()).isEqualTo(FriendStatus.REQUEST);
 
         assertThat(friend2.getFriendId()).isEqualTo(member1.getId());
-        assertThat(friend2.getFriendsStatus()).isEqualTo(FriendStatus.RESPONSE);
+        assertThat(friend2.getFriendStatus()).isEqualTo(FriendStatus.RESPONSE);
     }
 
     @Test
@@ -120,10 +120,10 @@ class FriendServiceTest {
         Friend friend2 = member2.getFriends().get(0);
 
         assertThat(friend1.getFriendId()).isEqualTo(member2.getId());
-        assertThat(friend1.getFriendsStatus()).isEqualTo(FriendStatus.ACCEPT);
+        assertThat(friend1.getFriendStatus()).isEqualTo(FriendStatus.ACCEPT);
 
         assertThat(friend2.getFriendId()).isEqualTo(member1.getId());
-        assertThat(friend2.getFriendsStatus()).isEqualTo(FriendStatus.ACCEPT);
+        assertThat(friend2.getFriendStatus()).isEqualTo(FriendStatus.ACCEPT);
     }
 
     @Test
@@ -145,10 +145,10 @@ class FriendServiceTest {
         Friend friend2 = member2.getFriends().get(0);
 
         assertThat(friend1.getFriendId()).isEqualTo(member2.getId());
-        assertThat(friend1.getFriendsStatus()).isEqualTo(FriendStatus.REJECT);
+        assertThat(friend1.getFriendStatus()).isEqualTo(FriendStatus.REJECT);
 
         assertThat(friend2.getFriendId()).isEqualTo(member1.getId());
-        assertThat(friend2.getFriendsStatus()).isEqualTo(FriendStatus.REJECT);
+        assertThat(friend2.getFriendStatus()).isEqualTo(FriendStatus.REJECT);
     }
 
     @Test
@@ -170,10 +170,10 @@ class FriendServiceTest {
         Friend friend2 = member2.getFriends().get(0);
 
         assertThat(friend1.getFriendId()).isEqualTo(member2.getId());
-        assertThat(friend1.getFriendsStatus()).isEqualTo(FriendStatus.DELETE);
+        assertThat(friend1.getFriendStatus()).isEqualTo(FriendStatus.DELETE);
 
         assertThat(friend2.getFriendId()).isEqualTo(member1.getId());
-        assertThat(friend2.getFriendsStatus()).isEqualTo(FriendStatus.DELETE);
+        assertThat(friend2.getFriendStatus()).isEqualTo(FriendStatus.DELETE);
     }
 
     @Test
@@ -202,7 +202,7 @@ class FriendServiceTest {
 
     private List<Long> mapFriendsToIdList(List<Friend> friends) {
         List<Long> idList = friends.stream()
-                .map(friend -> friend.getFriendId())
+                .map(Friend::getFriendId)
                 .collect(Collectors.toList());
         return idList;
     }
@@ -233,7 +233,7 @@ class FriendServiceTest {
         toMember.getFriends().add(Friend.builder()
                 .userMember(fromMember)
                 .friendId(fromMember.getId())
-                .friendsStatus(friendStatus)
+                .friendStatus(friendStatus)
                 .build());
     }
 }

@@ -17,7 +17,7 @@ public class FriendListResponseDto {
     @Builder
     public FriendListResponseDto(List<Friend> friends, List<String> nicknames) {
         List<FriendResponseDto> friendListResponseDto = friends.stream()
-                .map(friend -> new FriendResponseDto(friend.getFriendId(), friend.getFriendsStatus()))
+                .map(friend -> new FriendResponseDto(friend.getFriendId(), friend.getFriendStatus()))
                 .collect(Collectors.toList());
 
         addNicknames(friendListResponseDto, nicknames);

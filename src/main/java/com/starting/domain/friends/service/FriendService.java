@@ -123,7 +123,7 @@ public class FriendService {
     public FriendListResponseDto getAcceptFriendsList(Long memberId) {
         UserMember findMember = getUserMemberForId(memberId);
 
-        List<Friend> friends = friendRepository.findAllByUserMemberAndFriendsStatus(findMember, FriendStatus.ACCEPT);
+        List<Friend> friends = friendRepository.findAllByUserMemberAndFriendStatus(findMember, FriendStatus.ACCEPT);
         List<String> nicknames = userMemberRepository.findNicknamesByIdList(mapFriendsToIdList(friends));
 
         return createFriendListResponseDto(friends, nicknames);
@@ -138,7 +138,7 @@ public class FriendService {
 
     private List<Long> mapFriendsToIdList(List<Friend> friends) {
         List<Long> idList = friends.stream()
-                .map(friend -> friend.getFriendId())
+                .map(Friend::getFriendId)
                 .collect(Collectors.toList());
         return idList;
     }
