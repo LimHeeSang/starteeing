@@ -17,13 +17,11 @@ import java.util.List;
 @Entity
 public class UserMember extends Member {
 
-    public static final String MALE_TYPE = "M";
-    public static final String FEMALE_TYPE = "F";
-
     @Column(unique = true)
     private String nickName;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private GenderEnum genderEnum;
 
     private LocalDate birthOfDate;
 
@@ -78,14 +76,14 @@ public class UserMember extends Member {
     }
 
     public boolean isMale() {
-        return gender.equals(MALE_TYPE);
+        return genderEnum.isMale();
     }
 
     public boolean isFemale() {
-        return gender.equals(FEMALE_TYPE);
+        return genderEnum.isFemale();
     }
 
-    public String getGender() {
-        return gender;
+    public GenderEnum getGenderEnum() {
+        return genderEnum;
     }
 }
