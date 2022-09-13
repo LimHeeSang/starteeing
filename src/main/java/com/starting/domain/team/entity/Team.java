@@ -1,7 +1,7 @@
 package com.starting.domain.team.entity;
 
 import com.starting.domain.common.BaseTimeEntity;
-import com.starting.domain.meeting.entity.GenderEnum;
+import com.starting.domain.member.entity.GenderEnum;
 import com.starting.domain.meeting.entity.TeamMatches;
 import com.starting.domain.meeting.exception.NotEqualGenderException;
 import com.starting.domain.member.entity.Member;
@@ -78,23 +78,23 @@ public class Team extends BaseTimeEntity {
     }
 
     public boolean isNotEqualMembersGender() {
-        List<String> genders = members.stream().map(teamUserMember -> teamUserMember.getUserMember().getGender()).collect(Collectors.toList());
+        List<GenderEnum> genders = members.stream().map(teamUserMember -> teamUserMember.getUserMember().getGenderEnum()).collect(Collectors.toList());
 
-        String criterion = genders.get(0);
-        return genders.stream().noneMatch(s -> s.equals(criterion));
+        GenderEnum criterion = genders.get(0);
+        return genders.stream().noneMatch(g -> g.equals(criterion));
     }
 
-    private String isEqualMembersGender() {
-        List<String> genders = members.stream().map(teamUserMember -> teamUserMember.getUserMember().getGender()).collect(Collectors.toList());
+    private GenderEnum isEqualMembersGender() {
+        List<GenderEnum> genders = members.stream().map(teamUserMember -> teamUserMember.getUserMember().getGenderEnum()).collect(Collectors.toList());
 
-        String criterion = genders.get(0);
-        if (genders.stream().allMatch(s -> s.equals(criterion))) {
+        GenderEnum criterion = genders.get(0);
+        if (genders.stream().allMatch(g -> g.equals(criterion))) {
             return criterion;
         }
         throw new NotEqualGenderException();
     }
 
     public GenderEnum getTeamGender() {
-        return GenderEnum.valueOf(isEqualMembersGender());
+        return isEqualMembersGender();
     }
 }
