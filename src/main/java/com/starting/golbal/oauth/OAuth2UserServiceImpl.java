@@ -33,7 +33,6 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         } catch (AuthenticationException ex) {
             throw ex;
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }
@@ -45,14 +44,25 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         Optional<Member> findMember = memberRepository.findByUserId(userInfo.getUserId());
 
         if (findMember.isPresent()) {
-            Member updateMember = findMember.get();
-            updateMember.updateOAuth2UserInfo(userInfo);
-            return UserPrincipal.create(updateMember, user.getAttributes());
+            return updateMember(user, userInfo, findMember.get());
         }
 
+        UserMember createMember = createMember(providerEnum, userInfo);
+        return createUserPrincipal(user, createMember);
+    }
+
+    private UserPrincipal updateMember(OAuth2User user, OAuth2UserInfo userInfo, Member updateMember) {
+        updateMember.updateOAuth2UserInfo(userInfo);
+        return createUserPrincipal(user, updateMember);
+    }
+
+    private UserMember createMember(ProviderEnum providerEnum, OAuth2UserInfo userInfo) {
         UserMember createMember = userInfo.toEntity(providerEnum);
         memberRepository.save(createMember);
+        return createMember;
+    }
 
-        return UserPrincipal.create(createMember, user.getAttributes());
+    private UserPrincipal createUserPrincipal(OAuth2User user, Member member) {
+        return UserPrincipal.create(member, user.getAttributes());
     }
 }
