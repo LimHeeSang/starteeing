@@ -1,4 +1,4 @@
-package com.starting.domain.meeting.entity;
+package com.starting.domain.member.entity;
 
 import lombok.AllArgsConstructor;
 
