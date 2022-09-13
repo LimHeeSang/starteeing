@@ -3,7 +3,7 @@ package com.starting.domain.meeting.service;
 import com.starting.domain.meeting.dto.TicketResponseDto;
 import com.starting.domain.meeting.entity.Box;
 import com.starting.domain.meeting.entity.BoxContainer;
-import com.starting.domain.meeting.entity.Match;
+import com.starting.domain.meeting.entity.Matches;
 import com.starting.domain.meeting.entity.Ticket;
 import com.starting.domain.meeting.exception.NotEqualGenderException;
 import com.starting.domain.meeting.repository.MatchRepository;
@@ -53,7 +53,7 @@ public class BoxService {
     }
 
     private void createMatch(Team findTeam, Team opposeTeam) {
-        Match createMatch = Match.builder().teams(List.of(findTeam, opposeTeam)).build();
-        matchRepository.save(createMatch);
+        Matches createMatches = Matches.builder().teams(List.of(findTeam, opposeTeam)).build();
+        matchRepository.save(createMatches);
     }
 }
