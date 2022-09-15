@@ -28,8 +28,9 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);
 
+
         try {
-            return this.process(userRequest, user);
+            return process(userRequest, user);
         } catch (AuthenticationException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -37,23 +38,23 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         }
     }
 
-    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
+    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
         ProviderEnum providerEnum = ProviderEnum.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
-        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerEnum, user.getAttributes());
+        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerEnum, oAuth2User.getAttributes());
         Optional<Member> findMember = memberRepository.findByUserId(userInfo.getUserId());
 
         if (findMember.isPresent()) {
-            return updateMember(user, userInfo, findMember.get());
+            return updateMember(oAuth2User, userInfo, findMember.get());
         }
 
         UserMember createMember = createMember(providerEnum, userInfo);
-        return createUserPrincipal(user, createMember);
+        return createUserPrincipal(oAuth2User, createMember);
     }
 
-    private UserPrincipal updateMember(OAuth2User user, OAuth2UserInfo userInfo, Member updateMember) {
+    private UserPrincipal updateMember(OAuth2User oAuth2User, OAuth2UserInfo userInfo, Member updateMember) {
         updateMember.updateOAuth2UserInfo(userInfo);
-        return createUserPrincipal(user, updateMember);
+        return createUserPrincipal(oAuth2User, updateMember);
     }
 
     private UserMember createMember(ProviderEnum providerEnum, OAuth2UserInfo userInfo) {
@@ -62,7 +63,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
         return createMember;
     }
 
-    private UserPrincipal createUserPrincipal(OAuth2User user, Member member) {
-        return UserPrincipal.create(member, user.getAttributes());
+    private UserPrincipal createUserPrincipal(OAuth2User oAuth2User, Member member) {
+        return UserPrincipal.create(member, oAuth2User.getAttributes());
     }
 }
