@@ -2,9 +2,7 @@ package com.starting.golbal.oauth;
 
 import com.starting.domain.member.entity.Member;
 import com.starting.domain.member.entity.MemberRoleEnum;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,15 +16,15 @@ import java.util.Collections;
 import java.util.Map;
 
 @Getter
-@AllArgsConstructor
-@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
-    private final String email;
+    private final String userId;
     private final String password;
     private final ProviderEnum providerEnum;
     private final MemberRoleEnum memberRoleEnum;
     private final Collection<GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -40,12 +38,12 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
     @Override
     public String getName() {
-        return email;
+        return userId;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return userId;
     }
 
     @Override
@@ -83,25 +81,15 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
         return null;
     }
 
-    public static UserPrincipal create(Member member) {
-        return new UserPrincipal(
-                member.getEmail(),
-                member.getPassword(),
-                member.getProviderEnum(),
-                MemberRoleEnum.ROLE_USER,
-                Collections.singletonList(new SimpleGrantedAuthority(MemberRoleEnum.ROLE_USER.name()))
-        );
-    }
-
     public static UserPrincipal create(Member member, Map<String, Object> attributes) {
-        UserPrincipal userPrincipal = create(member);
-        userPrincipal.setAttributes(attributes);
-
-        return userPrincipal;
-    }
-
-    private void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
+        return UserPrincipal.builder()
+                .userId(member.getUserId())
+                .password(member.getPassword())
+                .providerEnum(member.getProviderEnum())
+                .memberRoleEnum(MemberRoleEnum.ROLE_USER)
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority(MemberRoleEnum.ROLE_USER.name())))
+                .attributes(attributes)
+                .build();
     }
 }
 
