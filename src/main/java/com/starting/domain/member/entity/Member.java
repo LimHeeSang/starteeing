@@ -72,12 +72,8 @@ public abstract class Member extends BaseTimeEntity {
     }
 
     public void updateOAuth2UserInfo(OAuth2UserInfo oAuth2UserInfo) {
-        if (!name.equals(oAuth2UserInfo.getName())) {
-            name = oAuth2UserInfo.getName();
-        }
         if (!imageProfileUrl.equals(oAuth2UserInfo.getImageUrl())) {
             imageProfileUrl = oAuth2UserInfo.getImageUrl();
-
         }
     }
 }
