@@ -1,13 +1,13 @@
 package com.starting.golbal.oauth.userinfo;
 
-import com.starting.domain.member.entity.SchoolInfo;
+import com.starting.domain.member.entity.GenderEnum;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.golbal.oauth.ProviderEnum;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 public abstract class OAuth2UserInfo {
+    public static final double DEFAULT_TEMPERATURE = 37.5D;
     protected Map<String, Object> attributes;
 
     public OAuth2UserInfo(Map<String, Object> attributes) {
@@ -26,28 +26,17 @@ public abstract class OAuth2UserInfo {
 
     public abstract String getImageUrl();
 
+    public abstract GenderEnum getGender();
+
     public UserMember toEntity(ProviderEnum providerEnum) {
         return UserMember.builder()
-                .name("홍길동")
                 .userId(getUserId())
-                .email("testEmail@test.com")
+                .email(getEmail())
                 .imageProfileUrl(getImageUrl())
-                .password("1234")
+                .genderEnum(getGender())
                 .providerEnum(providerEnum)
-                .nickName(getName())
-                .birthOfDate(LocalDate.of(1998, 9, 4))
-                .phoneNumber("010-8543-0619")
-                .mbti("estj")
-                .temperature(37.5D)
-                .schoolInfo(createSchoolInfo())
-                .build();
-    }
-
-    private SchoolInfo createSchoolInfo() {
-        return SchoolInfo.builder()
-                .school("순천향대")
-                .department("정보보호학과")
-                .uniqSchoolNumber("20174544")
+                .temperature(DEFAULT_TEMPERATURE)
+                .isInputUserDate(false)
                 .build();
     }
 }
