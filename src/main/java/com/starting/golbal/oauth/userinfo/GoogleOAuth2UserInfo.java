@@ -1,5 +1,7 @@
 package com.starting.golbal.oauth.userinfo;
 
+import com.starting.domain.member.entity.GenderEnum;
+
 import java.util.Map;
 
 public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
@@ -26,5 +28,10 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
     @Override
     public String getImageUrl() {
         return (String) attributes.get("picture");
+    }
+
+    @Override
+    public GenderEnum getGender() {
+        return null;
     }
 }

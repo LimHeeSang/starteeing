@@ -1,5 +1,7 @@
 package com.starting.golbal.oauth.userinfo;
 
+import com.starting.domain.member.entity.GenderEnum;
+
 import java.util.Map;
 
 public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
@@ -15,7 +17,7 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getName() {
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+        Map<String, Object> properties = getProperties();
 
         if (properties == null) {
             return null;
@@ -26,12 +28,24 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("account_email");
+        Map<String, Object> attributes = getAttributes();
+
+        if (attributes == null) {
+            return null;
+        }
+
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+
+        if (kakaoAccount == null) {
+            return null;
+        }
+
+        return (String) kakaoAccount.get("email");
     }
 
     @Override
     public String getImageUrl() {
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+        Map<String, Object> properties = getProperties();
 
         if (properties == null) {
             return null;
@@ -39,5 +53,32 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
         return (String) properties.get("thumbnail_image");
     }
-}
 
+    @Override
+    public GenderEnum getGender() {
+        Map<String, Object> attributes = getAttributes();
+
+        if (attributes == null) {
+            return null;
+        }
+
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+
+        if (kakaoAccount == null) {
+            return null;
+        }
+
+        String gender = (String) kakaoAccount.get("gender");
+        if (gender.equals("male")) {
+            return GenderEnum.MALE;
+        }
+        if (gender.equals("female")) {
+            return GenderEnum.FEMALE;
+        }
+        return null;
+    }
+
+    private Map<String, Object> getProperties() {
+        return (Map<String, Object>) attributes.get("properties");
+    }
+}

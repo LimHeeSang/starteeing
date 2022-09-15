@@ -1,5 +1,7 @@
 package com.starting.golbal.oauth.userinfo;
 
+import com.starting.domain.member.entity.GenderEnum;
+
 import java.util.Map;
 
 public class NaverOAuth2UserInfo extends OAuth2UserInfo {
@@ -50,6 +52,11 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
         }
 
         return (String) response.get("profile_image");
+    }
+
+    @Override
+    public GenderEnum getGender() {
+        return null;
     }
 }
 
