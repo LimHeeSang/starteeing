@@ -32,6 +32,8 @@ public class UserMember extends Member {
 
     private double temperature;
 
+    private boolean isInputUserDate;
+
     @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL)
     private final List<Friend> friends = new ArrayList<>();
 
