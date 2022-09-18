@@ -1,16 +1,10 @@
 package com.starting.domain.member.service;
 
-import com.starting.domain.member.dto.MemberLoginRequestDto;
-import com.starting.domain.member.dto.MemberLoginResponseDto;
-import com.starting.domain.member.dto.MemberReissueRequestDto;
-import com.starting.domain.member.dto.UserMemberSignupRequestDto;
+import com.starting.domain.member.dto.*;
 import com.starting.domain.member.entity.Member;
 import com.starting.domain.member.entity.RefreshToken;
 import com.starting.domain.member.entity.UserMember;
-import com.starting.domain.member.exception.ExistMemberException;
-import com.starting.domain.member.exception.NotExistMemberException;
-import com.starting.domain.member.exception.NotExistTokenException;
-import com.starting.domain.member.exception.NotValidTokenException;
+import com.starting.domain.member.exception.*;
 import com.starting.domain.member.repository.MemberRepository;
 import com.starting.domain.member.repository.UserMemberRepository;
 import com.starting.golbal.security.JwtProvider;
@@ -87,5 +81,24 @@ public class UserMemberService {
         refreshToken.updateRefreshToken(newTokenResponseDto.getRefreshToken());
 
         return newTokenResponseDto;
+    }
+
+    /**
+     * 유저 정보 입력 여부 확인
+     */
+    public IsInputUserDataResponseDto isInputUserData(Long memberId) {
+        UserMember findMember = userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
+        return IsInputUserDataResponseDto.builder()
+                .memberId(memberId)
+                .isInputData(findMember.isInputUserData())
+                .build();
+    }
+
+    /**
+     * 유저 정보 입력
+     */
+    public void inputUserData(Long memberId, InputUserDataRequestDto inputUserDataRequestDto) {
+        UserMember findMember = userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
+        findMember.inputUserData(inputUserDataRequestDto);
     }
 }
