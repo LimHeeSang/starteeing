@@ -1,6 +1,7 @@
 package com.starting.domain.member.entity;
 
 import com.starting.domain.common.BaseTimeEntity;
+import com.starting.domain.member.dto.InputUserDataRequestDto;
 import com.starting.golbal.oauth.ProviderEnum;
 import com.starting.golbal.oauth.userinfo.OAuth2UserInfo;
 import lombok.AccessLevel;
@@ -59,12 +60,10 @@ public abstract class Member extends BaseTimeEntity {
     }
 
     public void saveRefreshToken(String token) {
-        RefreshToken refreshToken  = RefreshToken.builder()
+        this.refreshToken = RefreshToken.builder()
                 .member(this)
                 .refreshToken(token)
                 .build();
-
-        this.refreshToken = refreshToken;
     }
 
     public Optional<RefreshToken> getRefreshToken() {
@@ -75,5 +74,9 @@ public abstract class Member extends BaseTimeEntity {
         if (!imageProfileUrl.equals(oAuth2UserInfo.getImageUrl())) {
             imageProfileUrl = oAuth2UserInfo.getImageUrl();
         }
+    }
+
+    public void inputUserData(InputUserDataRequestDto requestDto) {
+        this.name = requestDto.getName();
     }
 }
