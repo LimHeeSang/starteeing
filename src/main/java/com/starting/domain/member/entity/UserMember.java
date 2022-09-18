@@ -2,6 +2,7 @@ package com.starting.domain.member.entity;
 
 import com.starting.domain.friends.entity.Friend;
 import com.starting.domain.friends.entity.FriendStatus;
+import com.starting.domain.member.dto.InputUserDataRequestDto;
 import com.starting.domain.team.entity.TeamUserMember;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class UserMember extends Member {
 
     private double temperature;
 
-    private boolean isInputUserDate;
+    private boolean isInputUserData;
 
     @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL)
     private final List<Friend> friends = new ArrayList<>();
@@ -87,5 +88,35 @@ public class UserMember extends Member {
 
     public GenderEnum getGenderEnum() {
         return genderEnum;
+    }
+
+    public boolean isInputUserData() {
+        return isInputUserData;
+    }
+
+    @Override
+    public void inputUserData(InputUserDataRequestDto requestDto) {
+        super.inputUserData(requestDto);
+        this.birthOfDate = changeBirthOfDate(requestDto.getBirthOfDate());
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.nickName = requestDto.getNickname();
+        this.mbti = requestDto.getMbti();
+        this.schoolInfo = createSchoolInfo(
+                requestDto.getSchool(),
+                requestDto.getDepartment(),
+                requestDto.getUniqSchoolNumber()
+        );
+    }
+
+    private SchoolInfo createSchoolInfo(String school, String department, String uniqSchoolNumber) {
+        return SchoolInfo.builder()
+                .school(school)
+                .department(department)
+                .uniqSchoolNumber(uniqSchoolNumber)
+                .build();
+    }
+
+    private LocalDate changeBirthOfDate(String birthOfDate) {
+        return null;
     }
 }
