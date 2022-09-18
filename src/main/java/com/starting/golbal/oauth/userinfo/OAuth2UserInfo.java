@@ -7,7 +7,10 @@ import com.starting.golbal.oauth.ProviderEnum;
 import java.util.Map;
 
 public abstract class OAuth2UserInfo {
+
     public static final double DEFAULT_TEMPERATURE = 37.5D;
+    public static final boolean DEFAULT_INPUT_USERDATA_FLAG = false;
+
     protected Map<String, Object> attributes;
 
     public OAuth2UserInfo(Map<String, Object> attributes) {
@@ -36,7 +39,7 @@ public abstract class OAuth2UserInfo {
                 .genderEnum(getGender())
                 .providerEnum(providerEnum)
                 .temperature(DEFAULT_TEMPERATURE)
-                .isInputUserDate(false)
+                .isInputUserData(DEFAULT_INPUT_USERDATA_FLAG)
                 .build();
     }
 }
