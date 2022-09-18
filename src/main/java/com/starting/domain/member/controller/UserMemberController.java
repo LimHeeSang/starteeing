@@ -1,9 +1,6 @@
 package com.starting.domain.member.controller;
 
-import com.starting.domain.member.dto.MemberLoginRequestDto;
-import com.starting.domain.member.dto.MemberLoginResponseDto;
-import com.starting.domain.member.dto.MemberReissueRequestDto;
-import com.starting.domain.member.dto.UserMemberSignupRequestDto;
+import com.starting.domain.member.dto.*;
 import com.starting.domain.member.service.UserMemberService;
 import com.starting.golbal.response.ResponseService;
 import com.starting.golbal.response.result.CommonResult;
@@ -29,20 +26,24 @@ public class UserMemberController {
     @PostMapping("/login")
     public ResponseEntity<SingleResult> login(@RequestBody @Validated MemberLoginRequestDto loginRequestDto) {
         MemberLoginResponseDto loginResponseDto = userMemberService.login(loginRequestDto);
-
         return ResponseEntity.ok(responseService.getSingleResult(loginResponseDto));
     }
 
     @PostMapping("/reissue")
     public ResponseEntity<SingleResult> reissue(@RequestBody @Validated MemberReissueRequestDto reissueRequestDto) {
         MemberLoginResponseDto memberLoginResponseDto = userMemberService.reissue(reissueRequestDto);
-
         return ResponseEntity.ok(responseService.getSingleResult(memberLoginResponseDto));
     }
 
-    @CrossOrigin(origins = "*")
-    @GetMapping("/test")
-    public ResponseEntity<CommonResult> test() {
-        return ResponseEntity.ok(responseService.getSingleResult("test가 성공했습니다."));
+    @GetMapping("/inputted/{memberId}")
+    public ResponseEntity<SingleResult> isInputUserData(@PathVariable Long memberId) {
+        IsInputUserDataResponseDto isInputUserDataResponseDto = userMemberService.isInputUserData(memberId);
+        return ResponseEntity.ok(responseService.getSingleResult(isInputUserDataResponseDto));
+    }
+
+    @PostMapping("/inputs/{memberId}")
+    public ResponseEntity<CommonResult> inputUserData(@PathVariable Long memberId, @RequestBody @Validated InputUserDataRequestDto inputUserDataRequestDto) {
+        userMemberService.inputUserData(memberId, inputUserDataRequestDto);
+        return ResponseEntity.ok(responseService.getSuccessResult());
     }
 }
