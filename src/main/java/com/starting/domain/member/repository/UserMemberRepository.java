@@ -13,4 +13,6 @@ public interface UserMemberRepository extends JpaRepository<UserMember, Long> {
 
     @Query("select m.nickName from UserMember m where m.id in :ids")
     List<String> findNicknamesByIdList(List<Long> ids);
+
+    boolean existsByNickName(String nickname);
 }
