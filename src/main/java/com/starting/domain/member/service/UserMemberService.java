@@ -86,12 +86,9 @@ public class UserMemberService {
     /**
      * 유저 정보 입력 여부 확인
      */
-    public IsInputUserDataResponseDto isInputUserData(Long memberId) {
+    public boolean isInputUserData(Long memberId) {
         UserMember findMember = userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
-        return IsInputUserDataResponseDto.builder()
-                .memberId(memberId)
-                .isInputData(findMember.isInputUserData())
-                .build();
+        return findMember.isInputUserData();
     }
 
     /**

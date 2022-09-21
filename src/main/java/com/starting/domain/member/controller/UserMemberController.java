@@ -37,8 +37,8 @@ public class UserMemberController {
 
     @GetMapping("/inputted/{memberId}")
     public ResponseEntity<SingleResult> isInputUserData(@PathVariable Long memberId) {
-        IsInputUserDataResponseDto isInputUserDataResponseDto = userMemberService.isInputUserData(memberId);
-        return ResponseEntity.ok(responseService.getSingleResult(isInputUserDataResponseDto));
+        boolean result = userMemberService.isInputUserData(memberId);
+        return ResponseEntity.ok(responseService.getSingleResult(result));
     }
 
     @PostMapping("/inputs/{memberId}")
