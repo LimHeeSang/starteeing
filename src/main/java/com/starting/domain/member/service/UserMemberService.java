@@ -101,4 +101,12 @@ public class UserMemberService {
         UserMember findMember = userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
         findMember.inputUserData(inputUserDataRequestDto);
     }
+
+    /**
+     * 닉네임 중복 여부 확인
+     */
+    public boolean isDuplicateNickname(Long memberId, String nickname) {
+        userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
+        return userMemberRepository.existsByNickName(nickname);
+    }
 }
