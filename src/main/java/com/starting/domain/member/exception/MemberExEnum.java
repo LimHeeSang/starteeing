@@ -12,7 +12,8 @@ public enum MemberExEnum implements ExceptionEnum {
     NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST, "M0002", "존재하지 않는 회원입니다."),
     NOT_VALID_TOKEN(HttpStatus.UNAUTHORIZED, "M0003", "유효하지 않은 토큰입니다."),
     NOT_EXIST_TOKEN(HttpStatus.UNAUTHORIZED, "M0004", "토큰이 존재하지 않습니다."),
-    NOT_EQUAL_PASSWORD(HttpStatus.UNAUTHORIZED, "M0005", "패스워드가 일치하지 않습니다.");
+    NOT_EQUAL_PASSWORD(HttpStatus.UNAUTHORIZED, "M0005", "패스워드가 일치하지 않습니다."),
+    ALREADY_EXIST_NICKNAME(HttpStatus.BAD_REQUEST, "M0006", "해당 닉네임이 이미 존재합니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
