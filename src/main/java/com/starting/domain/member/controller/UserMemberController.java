@@ -46,4 +46,10 @@ public class UserMemberController {
         userMemberService.inputUserData(memberId, inputUserDataRequestDto);
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
+
+    @GetMapping("/duplicate/{memberId}/{nickname}")
+    public ResponseEntity<SingleResult> idDuplicateNickname(@PathVariable Long memberId, @PathVariable String nickname) {
+        boolean result = userMemberService.isDuplicateNickname(memberId, nickname);
+        return ResponseEntity.ok(responseService.getSingleResult(result));
+    }
 }
