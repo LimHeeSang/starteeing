@@ -106,6 +106,8 @@ public class UserMember extends Member {
                 requestDto.getDepartment(),
                 requestDto.getUniqSchoolNumber()
         );
+
+        changeInputUserDataFlag();
     }
 
     private SchoolInfo createSchoolInfo(String school, String department, String uniqSchoolNumber) {
@@ -118,5 +120,9 @@ public class UserMember extends Member {
 
     private LocalDate changeBirthOfDate(String birthOfDate) {
         return null;
+    }
+
+    private void changeInputUserDataFlag() {
+        this.isInputUserData = !isInputUserData;
     }
 }
