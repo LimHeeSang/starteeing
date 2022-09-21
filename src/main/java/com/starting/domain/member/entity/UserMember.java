@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,7 +120,7 @@ public class UserMember extends Member {
     }
 
     private LocalDate changeBirthOfDate(String birthOfDate) {
-        return null;
+        return LocalDate.parse(birthOfDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     private void changeInputUserDataFlag() {
