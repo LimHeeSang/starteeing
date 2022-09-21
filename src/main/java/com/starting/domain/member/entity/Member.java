@@ -2,8 +2,8 @@ package com.starting.domain.member.entity;
 
 import com.starting.domain.common.BaseTimeEntity;
 import com.starting.domain.member.dto.InputUserDataRequestDto;
-import com.starting.golbal.oauth.ProviderEnum;
-import com.starting.golbal.oauth.userinfo.OAuth2UserInfo;
+import com.starting.global.oauth.ProviderEnum;
+import com.starting.global.oauth.userinfo.OAuth2UserInfo;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

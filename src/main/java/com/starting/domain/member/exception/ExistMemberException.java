@@ -1,6 +1,6 @@
 package com.starting.domain.member.exception;
 
-import com.starting.golbal.exception.business.BusinessException;
+import com.starting.global.exception.business.BusinessException;
 
 public class ExistMemberException extends BusinessException {
 

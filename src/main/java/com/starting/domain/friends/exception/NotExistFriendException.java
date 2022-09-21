@@ -1,6 +1,6 @@
 package com.starting.domain.friends.exception;
 
-import com.starting.golbal.exception.business.BusinessException;
+import com.starting.global.exception.business.BusinessException;
 
 public class NotExistFriendException extends BusinessException {
 

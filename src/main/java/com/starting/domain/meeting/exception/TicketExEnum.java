@@ -1,6 +1,6 @@
 package com.starting.domain.meeting.exception;
 
-import com.starting.golbal.exception.common.ExceptionEnum;
+import com.starting.global.exception.common.ExceptionEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -2,9 +2,9 @@ package com.starting.domain.friends.controller;
 
 import com.starting.domain.friends.dto.FriendListResponseDto;
 import com.starting.domain.friends.service.FriendService;
-import com.starting.golbal.response.ResponseService;
-import com.starting.golbal.response.result.CommonResult;
-import com.starting.golbal.response.result.SingleResult;
+import com.starting.global.response.ResponseService;
+import com.starting.global.response.result.CommonResult;
+import com.starting.global.response.result.SingleResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
