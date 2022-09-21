@@ -96,6 +96,9 @@ public class UserMemberService {
      */
     public void inputUserData(Long memberId, InputUserDataRequestDto inputUserDataRequestDto) {
         UserMember findMember = userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
+        if (userMemberRepository.existsByNickName(inputUserDataRequestDto.getNickname())) {
+            throw new ExistNicknameException();
+        }
         findMember.inputUserData(inputUserDataRequestDto);
     }
 
