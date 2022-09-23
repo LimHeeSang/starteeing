@@ -5,6 +5,7 @@ import com.starting.domain.friends.entity.FriendStatus;
 import com.starting.domain.member.dto.InputUserDataRequestDto;
 import com.starting.domain.team.entity.TeamUserMember;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
+@Getter
 @Entity
 public class UserMember extends Member {
 
