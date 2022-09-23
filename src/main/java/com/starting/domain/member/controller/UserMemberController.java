@@ -2,9 +2,9 @@ package com.starting.domain.member.controller;
 
 import com.starting.domain.member.dto.*;
 import com.starting.domain.member.service.UserMemberService;
-import com.starting.golbal.response.ResponseService;
-import com.starting.golbal.response.result.CommonResult;
-import com.starting.golbal.response.result.SingleResult;
+import com.starting.global.response.ResponseService;
+import com.starting.global.response.result.CommonResult;
+import com.starting.global.response.result.SingleResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -51,5 +51,11 @@ public class UserMemberController {
     public ResponseEntity<SingleResult> idDuplicateNickname(@PathVariable Long memberId, @PathVariable String nickname) {
         boolean result = userMemberService.isDuplicateNickname(memberId, nickname);
         return ResponseEntity.ok(responseService.getSingleResult(result));
+    }
+
+    @GetMapping("/mypage/{memberId}")
+    public ResponseEntity<SingleResult> getUserMemberInfo(@PathVariable Long memberId) {
+        UserMemberInfoResponseDto userMemberInfoResponseDto = userMemberService.getUserMemberInfo(memberId);
+        return ResponseEntity.ok(responseService.getSingleResult(userMemberInfoResponseDto));
     }
 }
