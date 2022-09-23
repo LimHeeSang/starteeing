@@ -7,7 +7,7 @@ import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.exception.*;
 import com.starting.domain.member.repository.MemberRepository;
 import com.starting.domain.member.repository.UserMemberRepository;
-import com.starting.golbal.security.JwtProvider;
+import com.starting.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -47,7 +47,7 @@ public class UserMemberService {
     }
 
     /**
-     * 로그인
+     * 이메일 로그인
      */
     public MemberLoginResponseDto login(MemberLoginRequestDto loginRequestDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -108,5 +108,13 @@ public class UserMemberService {
     public boolean isDuplicateNickname(Long memberId, String nickname) {
         userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
         return userMemberRepository.existsByNickName(nickname);
+    }
+
+    /**
+     * 유저 정보 조회
+     */
+    public UserMemberInfoResponseDto getUserMemberInfo(Long memberId) {
+        UserMember findMember = userMemberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
+        return UserMemberInfoResponseDto.of(findMember);
     }
 }
