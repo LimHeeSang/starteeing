@@ -29,9 +29,9 @@ public class JwtProvider {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String GRANT_TYPE = "Bearer";
+    public static final String DEFAULT_CREDENTIALS = "";
 
     private final SecretKey key;
-
     private final UserDetailsServiceImpl userDetailsService;
 
     public JwtProvider(@Value("${spring.jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService) {
@@ -58,14 +58,6 @@ public class JwtProvider {
                 .build();
     }
 
-    private String createRefreshToken(Date now) {
-        return Jwts.builder()
-                .setIssuer(ISSUER)
-                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-    }
-
     private String createAccessToken(Authentication authentication, String authorities, Date now) {
         return Jwts.builder()
                 .setIssuer(ISSUER)
@@ -73,6 +65,14 @@ public class JwtProvider {
                 .claim(CLAIM_NAME_ROLES, authorities)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    private String createRefreshToken(Date now) {
+        return Jwts.builder()
+                .setIssuer(ISSUER)
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -88,7 +88,7 @@ public class JwtProvider {
      */
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(parseUserEmail(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, DEFAULT_CREDENTIALS, userDetails.getAuthorities());
     }
 
     private String parseUserEmail(String token) {
