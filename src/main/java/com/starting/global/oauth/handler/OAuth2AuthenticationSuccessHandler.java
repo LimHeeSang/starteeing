@@ -1,6 +1,8 @@
 package com.starting.global.oauth.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starting.domain.member.dto.MemberLoginResponseDto;
+import com.starting.domain.member.dto.OauthLoginResponseDto;
 import com.starting.domain.member.entity.Member;
 import com.starting.domain.member.exception.NotExistMemberException;
 import com.starting.domain.member.repository.MemberRepository;
@@ -36,7 +38,10 @@ import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterN
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private static final String QUERY_PARAMETER_ACCESS_TOKEN = "accessToken";
+    public static final String QUERY_PARAMETER_MEMBER_ID = "memberId";
+
     private final JwtProvider jwtProvider;
+    private final ObjectMapper mapper;
     private final AppProperties appProperties;
     private final MemberRepository memberRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
@@ -58,28 +63,33 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String targetUrl = getAndValidateRedirectUri(request);
 
-        MemberLoginResponseDto tokenResponseDto = createLoginResponseDto(authentication);
-
-        int cookieMaxAge = (int) (JwtProvider.REFRESH_TOKEN_VALID_MILLISECOND / 60);
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, tokenResponseDto.getRefreshToken(), cookieMaxAge);
+        OauthLoginResponseDto tokenResponseDto = createLoginResponseDto(authentication);
+        addCookie(request, response, tokenResponseDto);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam(QUERY_PARAMETER_ACCESS_TOKEN, tokenResponseDto.getAccessToken())
+                .queryParam(QUERY_PARAMETER_MEMBER_ID, tokenResponseDto.getMemberId())
                 .build().toUriString();
     }
 
-    private MemberLoginResponseDto createLoginResponseDto(Authentication authentication) {
+    private OauthLoginResponseDto createLoginResponseDto(Authentication authentication) {
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderEnum providerType = ProviderEnum.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
 
         OidcUser user = ((OidcUser) authentication.getPrincipal());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-
-        MemberLoginResponseDto tokenResponseDto = jwtProvider.createToken(authToken);
         Member member = memberRepository.findByUserId(userInfo.getUserId()).orElseThrow(NotExistMemberException::new);
+
+        OauthLoginResponseDto tokenResponseDto = jwtProvider.createToken(authToken, member.getId());
+
         member.saveRefreshToken(tokenResponseDto.getRefreshToken());
         return tokenResponseDto;
+    }
+
+    private void addCookie(HttpServletRequest request, HttpServletResponse response, MemberLoginResponseDto tokenResponseDto) {
+        int cookieMaxAge = (int) (JwtProvider.REFRESH_TOKEN_VALID_MILLISECOND / 60);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+        CookieUtil.addCookie(response, REFRESH_TOKEN, tokenResponseDto.getRefreshToken(), cookieMaxAge);
     }
 
     private String getAndValidateRedirectUri(HttpServletRequest request) {
