@@ -1,9 +1,11 @@
 package com.starting.domain.member.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@AllArgsConstructor
+@SuperBuilder
 @Getter
 public class MemberLoginResponseDto {
 
@@ -14,4 +16,5 @@ public class MemberLoginResponseDto {
     private String accessToken;
 
     private String refreshToken;
+
 }
