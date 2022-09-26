@@ -1,6 +1,7 @@
 package com.starting.global.security;
 
 import com.starting.domain.member.dto.MemberLoginResponseDto;
+import com.starting.domain.member.dto.OauthLoginResponseDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -44,13 +45,25 @@ public class JwtProvider {
      * Jwt token 생성
      */
     public MemberLoginResponseDto createToken(Authentication authentication) {
-        String authorities = getAuthorities(authentication);
         Date now = new Date();
-
-        String accessToken = createAccessToken(authentication, authorities, now);
+        String accessToken = createAccessToken(authentication, getAuthorities(authentication), now);
         String refreshToken = createRefreshToken(now);
 
         return MemberLoginResponseDto.builder()
+                .grantType(GRANT_TYPE)
+                .accessTokenExpireDate(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public OauthLoginResponseDto createToken(Authentication authentication, Long memberId) {
+        Date now = new Date();
+        String accessToken = createAccessToken(authentication, getAuthorities(authentication), now);
+        String refreshToken = createRefreshToken(now);
+
+        return OauthLoginResponseDto.builder()
+                .memberId(memberId)
                 .grantType(GRANT_TYPE)
                 .accessTokenExpireDate(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)
                 .accessToken(accessToken)
