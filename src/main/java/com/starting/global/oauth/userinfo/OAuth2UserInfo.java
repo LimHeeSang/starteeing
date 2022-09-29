@@ -8,7 +8,7 @@ import java.util.Map;
 
 public abstract class OAuth2UserInfo {
 
-    public static final double DEFAULT_TEMPERATURE = 37.5D;
+    public static final double DEFAULT_TEMPERATURE = 36.5D;
     public static final boolean DEFAULT_INPUT_USERDATA_FLAG = false;
 
     protected Map<String, Object> attributes;
