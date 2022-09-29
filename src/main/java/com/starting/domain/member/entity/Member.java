@@ -59,7 +59,14 @@ public abstract class Member extends BaseTimeEntity {
                 .collect(Collectors.toList());
     }
 
-    public void saveRefreshToken(String token) {
+    public void updateRefreshToken(String token) {
+        if (refreshToken == null) {
+            saveRefreshToken(token);
+        }
+        refreshToken.updateRefreshToken(token);
+    }
+
+    private void saveRefreshToken(String token) {
         this.refreshToken = RefreshToken.builder()
                 .member(this)
                 .refreshToken(token)
