@@ -100,11 +100,11 @@ public class JwtProvider {
      * Jwt 로 인증정보 조회
      */
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(parseUserEmail(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(parseUserName(token));
         return new UsernamePasswordAuthenticationToken(userDetails, DEFAULT_CREDENTIALS, userDetails.getAuthorities());
     }
 
-    private String parseUserEmail(String token) {
+    private String parseUserName(String token) {
         return parseBody(token).getSubject();
     }
 
