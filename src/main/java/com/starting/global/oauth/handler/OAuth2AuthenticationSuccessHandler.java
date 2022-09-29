@@ -1,6 +1,5 @@
 package com.starting.global.oauth.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starting.domain.member.dto.MemberLoginResponseDto;
 import com.starting.domain.member.dto.OauthLoginResponseDto;
 import com.starting.domain.member.entity.Member;
@@ -39,9 +38,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private static final String QUERY_PARAMETER_ACCESS_TOKEN = "accessToken";
     public static final String QUERY_PARAMETER_MEMBER_ID = "memberId";
+    public static final String QUERY_PARAMETER_ACCESS_TOKEN_EXPIRE_DATE = "accessTokenExpireDate";
 
     private final JwtProvider jwtProvider;
-    private final ObjectMapper mapper;
     private final AppProperties appProperties;
     private final MemberRepository memberRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
@@ -69,6 +68,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam(QUERY_PARAMETER_ACCESS_TOKEN, tokenResponseDto.getAccessToken())
                 .queryParam(QUERY_PARAMETER_MEMBER_ID, tokenResponseDto.getMemberId())
+                .queryParam(QUERY_PARAMETER_ACCESS_TOKEN_EXPIRE_DATE, tokenResponseDto.getAccessTokenExpireDate())
                 .build().toUriString();
     }
 
@@ -78,11 +78,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         OidcUser user = ((OidcUser) authentication.getPrincipal());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Member member = memberRepository.findByUserId(userInfo.getUserId()).orElseThrow(NotExistMemberException::new);
+        Member member = memberRepository.findByUserIdWithRefreshToken(userInfo.getUserId()).orElseThrow(NotExistMemberException::new);
 
         OauthLoginResponseDto tokenResponseDto = jwtProvider.createToken(authToken, member.getId());
 
-        member.saveRefreshToken(tokenResponseDto.getRefreshToken());
+        member.updateRefreshToken(tokenResponseDto.getRefreshToken());
         return tokenResponseDto;
     }
 
