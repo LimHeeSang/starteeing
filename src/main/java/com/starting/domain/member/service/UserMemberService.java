@@ -7,6 +7,7 @@ import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.exception.*;
 import com.starting.domain.member.repository.MemberRepository;
 import com.starting.domain.member.repository.UserMemberRepository;
+import com.starting.global.oauth.util.EmailUtil;
 import com.starting.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,10 +54,10 @@ public class UserMemberService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        Member findMember = memberRepository.findByEmail(authentication.getName()).orElseThrow(NotExistMemberException::new);
+        Member findMember = memberRepository.findByEmailWithRefreshToken(authentication.getName()).orElseThrow(NotExistMemberException::new);
 
         MemberLoginResponseDto loginResponseDto = jwtProvider.createToken(authentication);
-        findMember.saveRefreshToken(loginResponseDto.getRefreshToken());
+        findMember.updateRefreshToken(loginResponseDto.getRefreshToken());
 
         return loginResponseDto;
     }
@@ -70,9 +71,9 @@ public class UserMemberService {
         }
 
         Authentication authentication = jwtProvider.getAuthentication(reissueRequestDto.getAccessToken());
-        Member findMember = memberRepository.findByEmailWithRefreshToken(authentication.getName()).orElseThrow(NotExistMemberException::new);
-        RefreshToken refreshToken = findMember.getRefreshToken().orElseThrow(NotExistTokenException::new);
+        Member findMember = getMember(authentication);
 
+        RefreshToken refreshToken = findMember.getRefreshToken().orElseThrow(NotExistTokenException::new);
         if (!refreshToken.isEqualTokenValue(reissueRequestDto.getRefreshToken())) {
             throw new NotValidTokenException();
         }
@@ -81,6 +82,13 @@ public class UserMemberService {
         refreshToken.updateRefreshToken(newTokenResponseDto.getRefreshToken());
 
         return newTokenResponseDto;
+    }
+
+    private Member getMember(Authentication authentication) {
+        if (EmailUtil.isEmailRegex(authentication.getName())) {
+            return memberRepository.findByEmailWithRefreshToken(authentication.getName()).orElseThrow(NotExistMemberException::new);
+        }
+        return memberRepository.findByUserIdWithRefreshToken(authentication.getName()).orElseThrow(NotExistMemberException::new);
     }
 
     /**
