@@ -24,7 +24,7 @@ public class TeamListResponseDto {
     }
 
     @AllArgsConstructor
-    private class TeamResponseDto {
+    private static class TeamResponseDto {
         private Long teamId;
 
         private String teamName;

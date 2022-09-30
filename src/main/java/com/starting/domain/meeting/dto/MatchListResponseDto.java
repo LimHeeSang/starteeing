@@ -17,7 +17,7 @@ public class MatchListResponseDto {
         result.add(matchResponseDtos);
     }
 
-    public class MatchResponseDto {
+    public static class MatchResponseDto {
         private String teamName;
 
         private int memberNumber;

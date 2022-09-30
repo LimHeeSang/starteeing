@@ -32,7 +32,7 @@ public class FriendListResponseDto {
     }
 
     @Getter
-    public class FriendResponseDto {
+    public static class FriendResponseDto {
         private Long friendId;
 
         private String nickName;
