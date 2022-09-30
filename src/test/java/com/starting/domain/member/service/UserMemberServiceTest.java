@@ -59,7 +59,7 @@ class UserMemberServiceTest {
     @BeforeEach
     void setUp() {
         savedMember = createUserMemberRequestDto().toEntity(new BCryptPasswordEncoder());
-        savedMember.saveRefreshToken("test_refresh_token");
+        savedMember.updateRefreshToken("test_refresh_token");
 
         Long fakeMemberId = 1L;
         ReflectionTestUtils.setField(savedMember, "id", fakeMemberId);
