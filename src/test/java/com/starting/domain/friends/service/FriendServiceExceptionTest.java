@@ -128,7 +128,7 @@ public class FriendServiceExceptionTest {
         toMember.getFriends().add(Friend.builder()
                 .userMember(fromMember)
                 .friendId(fromMember.getId())
-                .friendsStatus(friendStatus)
+                .friendStatus(friendStatus)
                 .build());
     }
 }
