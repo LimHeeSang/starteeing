@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/oauth2/**", "/auth/**", "/login/**", "/oauth/**").permitAll()
-                .antMatchers("/login", "/signup").permitAll()
+                .antMatchers("/login", "/signup", "/reissue").permitAll()
                 .antMatchers("/login/oauth2/code/*").permitAll()
                 .antMatchers("/test").hasRole("ADMIN")
                 .anyRequest().hasRole("USER");
