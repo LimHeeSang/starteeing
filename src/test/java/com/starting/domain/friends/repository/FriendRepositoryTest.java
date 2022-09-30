@@ -41,11 +41,11 @@ class FriendRepositoryTest {
 
         friend1 = Friend.builder().userMember(userMember1)
                 .friendId(userMember2.getId())
-                .friendsStatus(FriendStatus.REQUEST)
+                .friendStatus(FriendStatus.REQUEST)
                 .build();
         friend2 = Friend.builder().userMember(userMember1)
                 .friendId(userMember3.getId())
-                .friendsStatus(FriendStatus.REQUEST)
+                .friendStatus(FriendStatus.REQUEST)
                 .build();
 
         friendRepository.save(friend1);
