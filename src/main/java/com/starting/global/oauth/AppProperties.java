@@ -1,43 +1,48 @@
 package com.starting.global.oauth;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@ConstructorBinding
+@RequiredArgsConstructor
 @ConfigurationProperties(prefix = "app")
-@Component
-public class AppProperties {
+public final class AppProperties {
 
-    private final Auth auth = new Auth();
-    private final OAuth2 oauth2 = new OAuth2();
+    private final Jwt jwt;
+    private final Oauth2 oauth2;
+
+    public String  getJwtTokenSecret() {
+        return jwt.getTokenSecret();
+    }
+
+    public Long getJwtAccessTokenExpire() {
+        return jwt.getAccessTokenExpire();
+    }
+
+    public Long getJwtRefreshTokenExpire() {
+        return jwt.getRefreshTokenExpire();
+    }
+
+    public List<String> getOauth2AuthorizedRedirectUris() {
+        return oauth2.getAuthorizedRedirectUris();
+    }
 
     @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Auth {
-        private String tokenSecret;
-        private long tokenExpiry;
-        private long refreshTokenExpiry;
+    @RequiredArgsConstructor
+    private static class Jwt {
+        private final String tokenSecret;
+        private final Long accessTokenExpire;
+        private final Long refreshTokenExpire;
     }
 
-    public static final class OAuth2 {
-        private List<String> authorizedRedirectUris = new ArrayList<>();
-
-        public List<String> getAuthorizedRedirectUris() {
-            return authorizedRedirectUris;
-        }
-
-        public OAuth2 authorizedRedirectUris(List<String> authorizedRedirectUris) {
-            this.authorizedRedirectUris = authorizedRedirectUris;
-            return this;
-        }
+    @Getter
+    @RequiredArgsConstructor
+    private static class Oauth2 {
+        private final List<String> authorizedRedirectUris;
     }
+
 }
