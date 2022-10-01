@@ -1,6 +1,7 @@
 package com.starting.global.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starting.global.oauth.AppProperties;
 import com.starting.global.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.starting.global.oauth.OAuth2UserServiceImpl;
 import com.starting.global.oauth.handler.OAuth2AuthenticationFailureHandler;
@@ -9,6 +10,7 @@ import com.starting.global.response.ResponseService;
 import com.starting.global.security.handler.JwtAccessDeniedHandler;
 import com.starting.global.security.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,6 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+@EnableConfigurationProperties(value = {AppProperties.class})
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
@@ -80,18 +83,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
-    /**
-     * swagger 설정
-     */
-    /*@Override
-    public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**");
-    }*/
-
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(jwtAuthenticationProvider());
     }
 
