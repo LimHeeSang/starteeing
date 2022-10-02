@@ -2,12 +2,12 @@ package com.starting.global.security;
 
 import com.starting.domain.member.dto.MemberLoginResponseDto;
 import com.starting.domain.member.dto.OauthLoginResponseDto;
+import com.starting.global.oauth.AppProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 public class JwtProvider {
 
     private static final String ISSUER = "starting";
-    private static final Long ACCESS_TOKEN_VALID_MILLISECOND = 1000 * 60 * 30L;
-    public static final Long REFRESH_TOKEN_VALID_MILLISECOND = 1000 * 60 * 60 * 24 * 7L;
     private static final String CLAIM_NAME_ROLES = "roles";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
@@ -33,12 +31,18 @@ public class JwtProvider {
     public static final String DEFAULT_CREDENTIALS = "";
 
     private final SecretKey key;
+    private final AppProperties appProperties;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public JwtProvider(@Value("${spring.jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+    public JwtProvider(AppProperties appProperties, UserDetailsServiceImpl userDetailsService) {
+        this.appProperties = appProperties;
+        this.key = createSecretKey(appProperties.getJwtTokenSecret());
         this.userDetailsService = userDetailsService;
+    }
+
+    private SecretKey createSecretKey(String key) {
+        byte[] keyBytes = Decoders.BASE64.decode(key);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     /**
@@ -51,7 +55,7 @@ public class JwtProvider {
 
         return MemberLoginResponseDto.builder()
                 .grantType(GRANT_TYPE)
-                .accessTokenExpireDate(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)
+                .accessTokenExpireDate(now.getTime() + appProperties.getJwtAccessTokenExpire())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -65,7 +69,7 @@ public class JwtProvider {
         return OauthLoginResponseDto.builder()
                 .memberId(memberId)
                 .grantType(GRANT_TYPE)
-                .accessTokenExpireDate(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND)
+                .accessTokenExpireDate(now.getTime() + appProperties.getJwtAccessTokenExpire())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -77,7 +81,7 @@ public class JwtProvider {
                 .setSubject(authentication.getName())
                 .claim(CLAIM_NAME_ROLES, authorities)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND))
+                .setExpiration(new Date(now.getTime() + appProperties.getJwtAccessTokenExpire()))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -85,7 +89,7 @@ public class JwtProvider {
     private String createRefreshToken(Date now) {
         return Jwts.builder()
                 .setIssuer(ISSUER)
-                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_VALID_MILLISECOND))
+                .setExpiration(new Date(now.getTime() + appProperties.getJwtRefreshTokenExpire()))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
