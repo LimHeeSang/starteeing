@@ -21,6 +21,8 @@ import java.util.List;
 @Entity
 public class UserMember extends Member {
 
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd";
+
     @Column(unique = true)
     private String nickName;
 
@@ -122,7 +124,7 @@ public class UserMember extends Member {
     }
 
     private LocalDate changeBirthOfDate(String birthOfDate) {
-        return LocalDate.parse(birthOfDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return LocalDate.parse(birthOfDate, DateTimeFormatter.ofPattern(DATE_TIME_PATTERN));
     }
 
     private void changeInputUserDataFlag() {
