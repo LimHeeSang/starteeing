@@ -87,7 +87,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private void addCookie(HttpServletRequest request, HttpServletResponse response, MemberLoginResponseDto tokenResponseDto) {
-        int cookieMaxAge = (int) (JwtProvider.REFRESH_TOKEN_VALID_MILLISECOND / 60);
+        int cookieMaxAge = (int) (appProperties.getJwtRefreshTokenExpire() / 60);
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, tokenResponseDto.getRefreshToken(), cookieMaxAge);
     }
@@ -111,7 +111,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
 
-        return appProperties.getOauth2().getAuthorizedRedirectUris()
+        return appProperties.getOauth2AuthorizedRedirectUris()
                 .stream()
                 .anyMatch(authorizedRedirectUri -> {
                     // Only validate host and port. Let the clients use different paths if they want to
