@@ -51,7 +51,7 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
             return null;
         }
 
-        return (String) properties.get("thumbnail_image");
+        return (String) properties.get("profile_image");
     }
 
     @Override
