@@ -1,13 +1,12 @@
 package com.starting.domain.member.repository;
 
-import com.starting.domain.member.entity.SchoolInfo;
 import com.starting.domain.member.entity.UserMember;
+import com.starting.test.TestUserMemberFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,54 +18,43 @@ class UserMemberRepositoryTest {
     @Autowired
     private UserMemberRepository userMemberRepository;
 
-    UserMember member1;
-    UserMember member2;
-    UserMember member3;
+    UserMember testMember1;
+    UserMember testMember2;
+    UserMember testMember3;
 
     @BeforeEach
     void setUp() {
-        member1 = createUserMember("aaa@naver.com", "userA", "010-1234-0000", "12340000");
-        member2 = createUserMember("bbb@naver.com", "userB", "010-1234-0001", "12340001");
-        member3 = createUserMember("ccc@naver.com", "userC", "010-1234-0002", "12340002");
+        testMember1 = TestUserMemberFactory.create();
+        testMember2 = TestUserMemberFactory.create();
+        testMember3 = TestUserMemberFactory.create();
 
-        userMemberRepository.save(member1);
-        userMemberRepository.save(member2);
-        userMemberRepository.save(member3);
+        userMemberRepository.save(testMember1);
+        userMemberRepository.save(testMember2);
+        userMemberRepository.save(testMember3);
     }
 
     @Test
     void findByNickName() {
-        UserMember findMember = userMemberRepository.findByNickName("userB").get();
+        UserMember findMember = userMemberRepository.findByNickName(testMember1.getNickName()).get();
 
-        assertThat(findMember).isEqualTo(member2);
-        assertThat(findMember.getId()).isEqualTo(member2.getId());
+        assertThat(findMember).isEqualTo(testMember1);
+        assertThat(findMember.getId()).isEqualTo(testMember1.getId());
     }
 
     @Test
     void findNicknamesByIdList() {
-        List<Long> ids = Arrays.asList(member1.getId(), member3.getId());
+        List<Long> ids = Arrays.asList(testMember1.getId(), testMember3.getId());
 
         List<String> nicknames = userMemberRepository.findNicknamesByIdList(ids);
-        assertThat(nicknames).contains("userA", "userC");
+        assertThat(nicknames).contains(testMember1.getNickName(), testMember3.getNickName());
     }
 
-    private UserMember createUserMember(String email, String nickName, String phoneNumber, String schoolNumber) {
-        SchoolInfo schoolInfo = SchoolInfo.builder()
-                .school("순천향대")
-                .department("정보보호학과")
-                .uniqSchoolNumber(schoolNumber)
-                .build();
+    @Test
+    void existByNickName() {
+        boolean result1 = userMemberRepository.existsByNickName(testMember1.getNickName());
+        boolean result2 = userMemberRepository.existsByNickName("nothing nickname");
 
-        return UserMember.builder()
-                .name("홍길동")
-                .email(email)
-                .password("1234")
-                .nickName(nickName)
-                .birthOfDate(LocalDate.of(1998, 9, 4))
-                .phoneNumber(phoneNumber)
-                .mbti("estj")
-                .temperature(37.5D)
-                .schoolInfo(schoolInfo)
-                .build();
+        assertThat(result1).isTrue();
+        assertThat(result2).isFalse();
     }
 }
