@@ -1,12 +1,13 @@
 package com.starting.domain.member.repository;
 
 import com.starting.domain.member.entity.*;
+import com.starting.test.TestUserMemberFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,63 +19,60 @@ class MemberRepositoryTest {
     @Autowired
     private UserMemberRepository userMemberRepository;
 
-    private UserMember userMember;
+    private UserMember testUserMember;
+    private UserMember testUserMember2;
 
     @BeforeEach
     void setUp() {
-        userMember = UserMember.builder()
-                .name("홍길동")
-                .email("abc@naver.com")
-                .password("1234")
-                .nickName("길동이")
-                .birthOfDate(LocalDate.of(1998, 9, 4))
-                .refreshToken(createTestRefreshToken())
-                .phoneNumber("010-8543-0619")
-                .mbti("estj")
-                .schoolInfo(createSchoolInfo())
-                .build();
+        testUserMember = TestUserMemberFactory.create();
+        testUserMember2 = TestUserMemberFactory.create();
 
-        userMemberRepository.save(userMember);
-    }
-
-    private SchoolInfo createSchoolInfo() {
-        SchoolInfo schoolInfo = SchoolInfo.builder()
-                .school("순천향대")
-                .department("정보보호학과")
-                .uniqSchoolNumber("12345678")
-                .build();
-        return schoolInfo;
-    }
-
-    private RefreshToken createTestRefreshToken() {
-        return RefreshToken.builder().refreshToken("Test_Refresh_Token_Value").build();
+        userMemberRepository.save(testUserMember);
+        userMemberRepository.save(testUserMember2);
     }
 
     @Test
     void existsByEmail() {
-        boolean result = memberRepository.existsByEmail("abc@naver.com");
+        boolean result = memberRepository.existsByEmail(testUserMember.getEmail());
         assertThat(result).isTrue();
     }
 
     @Test
     void findByEmail() {
-        Member member = memberRepository.findByEmail("abc@naver.com").get();
+        Member member = memberRepository.findByEmail(testUserMember.getEmail()).get();
 
-        assertThat(member.getEmail()).isEqualTo("abc@naver.com");
-        assertThat(member.getName()).isEqualTo("홍길동");
+        assertThat(member.getEmail()).isEqualTo(testUserMember.getEmail());
+        assertThat(member.getName()).isEqualTo(testUserMember.getName());
     }
 
     @Test
     void findByEmailWithMemberRoles() {
-        Member member = memberRepository.findByEmailWithMemberRoles("abc@naver.com").get();
+        Member member = memberRepository.findByEmailWithMemberRoles(testUserMember.getEmail()).get();
 
         assertThat(member.getMemberRoles()).containsOnly(new MemberRole(MemberRoleEnum.ROLE_USER));
     }
 
     @Test
     void findByEmailWithRefreshToken() {
-        Member member = memberRepository.findByEmailWithRefreshToken("abc@naver.com").get();
+        Member member = memberRepository.findByEmailWithRefreshToken(testUserMember.getEmail()).get();
 
-        assertThat(member.getRefreshToken().get().getRefreshTokenValue()).isEqualTo("Test_Refresh_Token_Value");
+        assertThat(member.getRefreshToken().get().getRefreshTokenValue()).isEqualTo(testUserMember.getRefreshToken().get().getRefreshTokenValue());
+
+    }
+
+    @Test
+    void findByUserId() {
+        Member member = memberRepository.findByUserId(testUserMember.getUserId()).get();
+
+        assertThat(testUserMember).isEqualTo(member);
+    }
+
+    @Test
+    void findAllById() {
+        Long id = testUserMember.getId();
+        Long id1 = testUserMember2.getId();
+
+        List<Member> members = memberRepository.findAllById(List.of(id, id1));
+        assertThat(members).contains(testUserMember);
     }
 }
