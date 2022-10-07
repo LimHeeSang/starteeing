@@ -66,22 +66,30 @@ public class UserMemberService {
      * 토큰 재발급
      */
     public MemberLoginResponseDto reissue(MemberReissueRequestDto reissueRequestDto) {
-        if (!jwtProvider.validateToken(reissueRequestDto.getAccessToken())) {
-            throw new NotValidTokenException();
-        }
+        validateAccessToken(reissueRequestDto);
 
         Authentication authentication = jwtProvider.getAuthentication(reissueRequestDto.getAccessToken());
         Member findMember = getMember(authentication);
 
         RefreshToken refreshToken = findMember.getRefreshToken().orElseThrow(NotExistTokenException::new);
-        if (!refreshToken.isEqualTokenValue(reissueRequestDto.getRefreshToken())) {
-            throw new NotValidTokenException();
-        }
+        validateRefreshToken(reissueRequestDto, refreshToken);
 
         MemberLoginResponseDto newTokenResponseDto = jwtProvider.createToken(authentication);
         refreshToken.updateRefreshToken(newTokenResponseDto.getRefreshToken());
 
         return newTokenResponseDto;
+    }
+
+    private void validateAccessToken(MemberReissueRequestDto reissueRequestDto) {
+        if (!jwtProvider.validateToken(reissueRequestDto.getAccessToken())) {
+            throw new NotValidTokenException();
+        }
+    }
+
+    private void validateRefreshToken(MemberReissueRequestDto reissueRequestDto, RefreshToken refreshToken) {
+        if (!refreshToken.isEqualTokenValue(reissueRequestDto.getRefreshToken())) {
+            throw new NotValidTokenException();
+        }
     }
 
     private Member getMember(Authentication authentication) {
