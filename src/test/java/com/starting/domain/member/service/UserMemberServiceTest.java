@@ -1,9 +1,6 @@
 package com.starting.domain.member.service;
 
-import com.starting.domain.member.dto.MemberLoginRequestDto;
-import com.starting.domain.member.dto.MemberLoginResponseDto;
-import com.starting.domain.member.dto.MemberReissueRequestDto;
-import com.starting.domain.member.dto.UserMemberSignupRequestDto;
+import com.starting.domain.member.dto.*;
 import com.starting.domain.member.entity.MemberRoleEnum;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.exception.ExistMemberException;
@@ -12,6 +9,7 @@ import com.starting.domain.member.repository.UserMemberRepository;
 import com.starting.global.security.JwtAuthenticationProvider;
 import com.starting.global.security.JwtProvider;
 import com.starting.global.security.UserDetailsServiceImpl;
+import com.starting.test.TestUserMemberFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,16 +49,20 @@ class UserMemberServiceTest {
     UserDetailsServiceImpl userDetailsService;
     @Mock
     JwtAuthenticationProvider jwtAuthenticationProvider;
+    @Mock
+    AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @InjectMocks
     UserMemberService userMemberService;
 
     UserMember savedMember;
+    UserMember savedMember2;
 
     @BeforeEach
     void setUp() {
-        savedMember = createUserMemberRequestDto().toEntity(new BCryptPasswordEncoder());
-        savedMember.updateRefreshToken("test_refresh_token");
+        savedMember = TestUserMemberFactory.create();
+
+        savedMember2 = TestUserMemberFactory.create();
 
         Long fakeMemberId = 1L;
         ReflectionTestUtils.setField(savedMember, "id", fakeMemberId);
@@ -77,20 +80,24 @@ class UserMemberServiceTest {
 
     @Test
     void 중복회원_회원가입_예외() {
-        given(memberRepository.existsByEmail("abc@naver.com")).willReturn(true);
+        given(memberRepository.existsByEmail(any())).willReturn(true);
 
         assertThatThrownBy(
                 () -> userMemberService.memberJoin(createUserMemberRequestDto())
         ).isInstanceOf(ExistMemberException.class);
     }
 
-    @Test
     void 로그인() throws Exception {
-        // TODO: 2022-06-25 작성 보류..
+        //authenticationManagerBuilder.getObject() test에서 null문제 해결해야함..
+        given(authenticationManagerBuilder.getObject().authenticate(any())).willReturn(new UsernamePasswordAuthenticationToken(
+                        savedMember.getEmail(),
+                        savedMember.getPassword(),
+                        mapToAuthorities(Arrays.asList(MemberRoleEnum.ROLE_USER))));
+        given(memberRepository.findByEmailWithRefreshToken(any())).willReturn(Optional.ofNullable(savedMember));
 
         MemberLoginResponseDto loginResponseDto = userMemberService.login(MemberLoginRequestDto.builder()
-                .email("abc@naver.com")
-                .password("1234")
+                .email(savedMember.getEmail())
+                .password(savedMember.getPassword())
                 .build());
 
         assertThat(loginResponseDto.getAccessToken()).isEqualTo("test_access_toke");
@@ -104,7 +111,30 @@ class UserMemberServiceTest {
     }
 
     @Test
-    void 토큰_재발급() {
+    void 토큰_재발급_Oauth로_회원가입() {
+        given(jwtProvider.validateToken(any())).willReturn(true);
+        given(jwtProvider.getAuthentication(any())).willReturn(new UsernamePasswordAuthenticationToken(
+                savedMember.getUserId(),
+                savedMember.getPassword(),
+                mapToAuthorities(Arrays.asList(MemberRoleEnum.ROLE_USER))));
+
+        given(memberRepository.findByUserIdWithRefreshToken(any())).willReturn(Optional.ofNullable(savedMember));
+        given(jwtProvider.createToken(any())).willReturn(MemberLoginResponseDto.builder()
+                .accessToken("new_test_access_toke")
+                .refreshToken("new_test_refresh_token")
+                .build());
+
+        MemberLoginResponseDto loginResponseDto = userMemberService.reissue(MemberReissueRequestDto.builder()
+                .accessToken("Test_Access_Token_Value")
+                .refreshToken("Test_Refresh_Token_Value")
+                .build());
+
+        assertThat(loginResponseDto.getAccessToken()).isEqualTo("new_test_access_toke");
+        assertThat(loginResponseDto.getRefreshToken()).isEqualTo("new_test_refresh_token");
+    }
+
+    @Test
+    void 토큰_재발급_Email로_회원가입() {
         given(jwtProvider.validateToken(any())).willReturn(true);
         given(jwtProvider.getAuthentication(any())).willReturn(new UsernamePasswordAuthenticationToken(savedMember.getEmail(),
                 savedMember.getPassword(),
@@ -117,12 +147,25 @@ class UserMemberServiceTest {
                 .build());
 
         MemberLoginResponseDto loginResponseDto = userMemberService.reissue(MemberReissueRequestDto.builder()
-                .accessToken("test_access_toke")
-                .refreshToken("test_refresh_token")
+                .accessToken("Test_Access_Token_Value")
+                .refreshToken("Test_Refresh_Token_Value")
                 .build());
 
         assertThat(loginResponseDto.getAccessToken()).isEqualTo("new_test_access_toke");
         assertThat(loginResponseDto.getRefreshToken()).isEqualTo("new_test_refresh_token");
+    }
+
+    private InputUserDataRequestDto createInputUserDateRequestDto() {
+        return InputUserDataRequestDto.builder()
+                .name("이름")
+                .birthOfDate("1998-09-04")
+                .phoneNumber("010-1234-1234")
+                .nickname("닉네임")
+                .mbti("estj")
+                .school("학교")
+                .department("학과")
+                .uniqSchoolNumber("학번")
+                .build();
     }
 
     private UserMemberSignupRequestDto createUserMemberRequestDto() {
