@@ -4,9 +4,9 @@ import com.starting.domain.friends.dto.FriendListResponseDto;
 import com.starting.domain.friends.entity.Friend;
 import com.starting.domain.friends.entity.FriendStatus;
 import com.starting.domain.friends.repository.FriendRepository;
-import com.starting.domain.member.entity.SchoolInfo;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.repository.UserMemberRepository;
+import com.starting.test.TestUserMemberFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +43,9 @@ class FriendServiceTest {
 
     @BeforeEach
     void setUp() {
-        member1 = createUserMember("aaa@naver.com", "userA", "010-1234-0000", "12340000");
-        member2 = createUserMember("bbb@naver.com", "userB", "010-1234-0001", "12340001");
-        member3 = createUserMember("ccc@naver.com", "userC", "010-1234-0002", "12340002");
+        member1 = TestUserMemberFactory.create();
+        member2 = TestUserMemberFactory.create();
+        member3 = TestUserMemberFactory.create();
 
         userMemberId1 = 1L;
         userMemberId2 = 2L;
@@ -205,28 +204,6 @@ class FriendServiceTest {
                 .map(Friend::getFriendId)
                 .collect(Collectors.toList());
         return idList;
-    }
-
-    private UserMember createUserMember(String email, String nickName, String phoneNumber, String schoolNumber) {
-        return UserMember.builder()
-                .name("홍길동")
-                .email(email)
-                .password("1234")
-                .nickName(nickName)
-                .birthOfDate(LocalDate.of(1998, 9, 4))
-                .phoneNumber(phoneNumber)
-                .mbti("estj")
-                .temperature(36.5D)
-                .schoolInfo(createSchoolInfo(schoolNumber))
-                .build();
-    }
-
-    private SchoolInfo createSchoolInfo(String schoolNumber) {
-        return SchoolInfo.builder()
-                .school("순천향대")
-                .department("정보보호학과")
-                .uniqSchoolNumber(schoolNumber)
-                .build();
     }
 
     private void addFriend(UserMember toMember, UserMember fromMember, FriendStatus friendStatus) {
