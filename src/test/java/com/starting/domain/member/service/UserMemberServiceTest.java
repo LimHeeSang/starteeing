@@ -155,6 +155,60 @@ class UserMemberServiceTest {
         assertThat(loginResponseDto.getRefreshToken()).isEqualTo("new_test_refresh_token");
     }
 
+    @Test
+    void 유저정보_입력여부_확인_false() {
+        given(userMemberRepository.findById(any())).willReturn(Optional.ofNullable(savedMember));
+        boolean result = userMemberService.isInputUserData(savedMember.getId());
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void 유저정보_입력여부_확인_true() {
+        given(userMemberRepository.findById(any())).willReturn(Optional.ofNullable(savedMember));
+        given(userMemberRepository.findById(any())).willReturn(Optional.ofNullable(savedMember));
+        given(userMemberRepository.existsByNickName(any())).willReturn(false);
+
+        userMemberService.inputUserData(savedMember.getId(), createInputUserDateRequestDto());
+        boolean result = userMemberService.isInputUserData(savedMember.getId());
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void 유저정보_입력() {
+        given(userMemberRepository.findById(any())).willReturn(Optional.ofNullable(savedMember));
+        given(userMemberRepository.existsByNickName(any())).willReturn(false);
+
+        userMemberService.inputUserData(savedMember.getId(), createInputUserDateRequestDto());
+    }
+
+    @Test
+    void 닉네임_중복여부_확인_true() {
+        given(userMemberRepository.findById(any())).willReturn(Optional.ofNullable(savedMember));
+        given(userMemberRepository.existsByNickName(any())).willReturn(true);
+
+        boolean result = userMemberService.isDuplicateNickname(savedMember.getId(), savedMember.getNickName());
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void 닉네임_중복여부_확인_false() {
+        given(userMemberRepository.findById(any())).willReturn(Optional.ofNullable(savedMember));
+        given(userMemberRepository.existsByNickName(any())).willReturn(false);
+
+        boolean result = userMemberService.isDuplicateNickname(savedMember.getId(), "nothing nickname");
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void 유저정보_조회() {
+        given(userMemberRepository.findById(any())).willReturn(Optional.ofNullable(savedMember));
+
+        UserMemberInfoResponseDto responseDto = userMemberService.getUserMemberInfo(savedMember.getId());
+        assertThat(responseDto.getName()).isEqualTo(savedMember.getName());
+        assertThat(responseDto.getMemberId()).isEqualTo(savedMember.getId());
+    }
+
     private InputUserDataRequestDto createInputUserDateRequestDto() {
         return InputUserDataRequestDto.builder()
                 .name("이름")
