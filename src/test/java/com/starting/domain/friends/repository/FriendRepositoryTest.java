@@ -2,15 +2,14 @@ package com.starting.domain.friends.repository;
 
 import com.starting.domain.friends.entity.Friend;
 import com.starting.domain.friends.entity.FriendStatus;
-import com.starting.domain.member.entity.SchoolInfo;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.repository.UserMemberRepository;
+import com.starting.test.TestUserMemberFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,9 +30,9 @@ class FriendRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        userMember1 = createUserMember("aaa@naver.com", "userA", "010-1234-0000", "12340000");
-        userMember2 = createUserMember("bbb@naver.com", "userB", "010-1234-0001", "12340001");
-        userMember3 = createUserMember("ccc@naver.com", "userC", "010-1234-0002", "12340002");
+        userMember1 = TestUserMemberFactory.create();
+        userMember2 = TestUserMemberFactory.create();
+        userMember3 = TestUserMemberFactory.create();
 
         userMemberRepository.save(userMember1);
         userMemberRepository.save(userMember2);
@@ -50,26 +49,6 @@ class FriendRepositoryTest {
 
         friendRepository.save(friend1);
         friendRepository.save(friend2);
-    }
-
-    public UserMember createUserMember(String email, String nickName, String phoneNumber, String schoolNumber) {
-        SchoolInfo schoolInfo = SchoolInfo.builder()
-                .school("순천향대")
-                .department("정보보호학과")
-                .uniqSchoolNumber(schoolNumber)
-                .build();
-
-        return UserMember.builder()
-                .name("홍길동")
-                .email(email)
-                .password("1234")
-                .nickName(nickName)
-                .birthOfDate(LocalDate.of(1998, 9, 4))
-                .phoneNumber(phoneNumber)
-                .mbti("estj")
-                .temperature(37.5D)
-                .schoolInfo(schoolInfo)
-                .build();
     }
 
     @Test
