@@ -1,6 +1,7 @@
 package com.starting.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starting.domain.member.dto.MemberLoginRequestDto;
 import com.starting.domain.member.dto.MemberLoginResponseDto;
 import com.starting.domain.member.dto.UserMemberSignupRequestDto;
 import com.starting.domain.member.exception.ExistMemberException;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -104,7 +106,7 @@ class UserMemberControllerTest {
     @Test
     void login() throws Exception {
         // TODO: 2022-06-27 작성 보류... 
-        String body = mapper.writeValueAsString(createUserMemberRequestDto());
+        String body = mapper.writeValueAsString(createMemberLoginRequestDto());
 
         given(userMemberService.login(any()))
                 .willReturn(MemberLoginResponseDto.builder()
@@ -151,6 +153,37 @@ class UserMemberControllerTest {
                 .andExpect(jsonPath("$.data.refreshToken", is("new_test_refresh_token")));
     }
 
+    // TODO: 2022-10-09 새로운 기능 테스트 작성
+    @Test
+    void isInputUserData_true() throws Exception {
+        given(userMemberService.isInputUserData(any())).willReturn(true);
+        given(responseService.getSingleResult(any())).willReturn(SingleResult.createSingleResult(true));
+
+        mockMvc.perform(get("/inputted/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.data", is(true)));
+    }
+
+    @Test
+    void isInputUserData_false() throws Exception {
+        given(userMemberService.isInputUserData(any())).willReturn(false);
+        given(responseService.getSingleResult(any())).willReturn(SingleResult.createSingleResult(false));
+
+        mockMvc.perform(get("/inputted/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.data", is(false)));
+    }
+
     private UserMemberSignupRequestDto createUserMemberRequestDto() {
         return UserMemberSignupRequestDto.builder()
                 .name("홍길동")
@@ -177,6 +210,13 @@ class UserMemberControllerTest {
                 .school("")
                 .department("")
                 .uniqSchoolNumber("")
+                .build();
+    }
+
+    private MemberLoginRequestDto createMemberLoginRequestDto() {
+        return MemberLoginRequestDto.builder()
+                .email("test@email.com")
+                .password("1234")
                 .build();
     }
 }
