@@ -1,9 +1,7 @@
 package com.starting.domain.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.starting.domain.member.dto.MemberLoginRequestDto;
-import com.starting.domain.member.dto.MemberLoginResponseDto;
-import com.starting.domain.member.dto.UserMemberSignupRequestDto;
+import com.starting.domain.member.dto.*;
 import com.starting.domain.member.exception.ExistMemberException;
 import com.starting.domain.member.exception.MemberExEnum;
 import com.starting.domain.member.service.UserMemberService;
@@ -131,7 +129,7 @@ class UserMemberControllerTest {
 
     @Test
     void reissue() throws Exception {
-        String body = mapper.writeValueAsString(createUserMemberRequestDto());
+        String body = mapper.writeValueAsString(MemberReissueRequestDto.builder().build());
 
         given(userMemberService.reissue(any()))
                 .willReturn(MemberLoginResponseDto.builder().build());
@@ -182,6 +180,21 @@ class UserMemberControllerTest {
                 .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
                 .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
                 .andExpect(jsonPath("$.data", is(false)));
+    }
+
+    @Test
+    void inputUserData() throws Exception {
+        String body = mapper.writeValueAsString(InputUserDataRequestDto.builder().build());
+        given(responseService.getSuccessResult()).willReturn(CommonResult.createSuccessResult());
+
+        mockMvc.perform(post("/inputs/1")
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())));
     }
 
     private UserMemberSignupRequestDto createUserMemberRequestDto() {
