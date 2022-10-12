@@ -197,6 +197,36 @@ class UserMemberControllerTest {
                 .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())));
     }
 
+    @Test
+    void isDuplicateNickname_true() throws Exception {
+        given(userMemberService.isDuplicateNickname(any(), any())).willReturn(true);
+        given(responseService.getSingleResult(any())).willReturn(SingleResult.createSingleResult(true));
+
+        mockMvc.perform(get("/duplicate/1/pobi")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.data", is(true)));
+    }
+
+    @Test
+    void isDuplicateNickname_false() throws Exception {
+        given(userMemberService.isDuplicateNickname(any(), any())).willReturn(false);
+        given(responseService.getSingleResult(any())).willReturn(SingleResult.createSingleResult(false));
+
+        mockMvc.perform(get("/duplicate/1/pobi")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.data", is(false)));
+    }
+
     private UserMemberSignupRequestDto createUserMemberRequestDto() {
         return UserMemberSignupRequestDto.builder()
                 .name("홍길동")
