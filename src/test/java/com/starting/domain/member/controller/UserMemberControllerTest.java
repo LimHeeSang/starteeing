@@ -151,7 +151,6 @@ class UserMemberControllerTest {
                 .andExpect(jsonPath("$.data.refreshToken", is("new_test_refresh_token")));
     }
 
-    // TODO: 2022-10-09 새로운 기능 테스트 작성
     @Test
     void isInputUserData_true() throws Exception {
         given(userMemberService.isInputUserData(any())).willReturn(true);
@@ -225,6 +224,22 @@ class UserMemberControllerTest {
                 .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
                 .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
                 .andExpect(jsonPath("$.data", is(false)));
+    }
+
+    @Test
+    void getUserMemberInfo() throws Exception {
+        given(userMemberService.getUserMemberInfo(any())).willReturn(UserMemberInfoResponseDto.builder().build());
+        given(responseService.getSingleResult(any()))
+                .willReturn(SingleResult.createSingleResult(UserMemberInfoResponseDto.builder().memberId(1L).build()));
+
+        mockMvc.perform(get("/mypage/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code", is(CommonExEnum.SUCCESS.getCode())))
+                .andExpect(jsonPath("$.message", is(CommonExEnum.SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.data.memberId", is(1)));
     }
 
     private UserMemberSignupRequestDto createUserMemberRequestDto() {
