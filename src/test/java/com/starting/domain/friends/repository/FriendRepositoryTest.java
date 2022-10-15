@@ -70,4 +70,10 @@ class FriendRepositoryTest {
         List<Friend> friends = friendRepository.findAllByUserMember(userMember1);
         assertThat(friends).contains(friend1, friend2);
     }
+
+    @Test
+    void findAllByUserMemberAndFriendStatus() {
+        List<Friend> friends = friendRepository.findAllByUserMemberAndFriendStatus(userMember1, FriendStatus.REQUEST);
+        assertThat(friends).contains(friend1, friend2);
+    }
 }
