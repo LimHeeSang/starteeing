@@ -195,7 +195,7 @@ class FriendServiceTest {
         for (FriendListResponseDto.FriendResponseDto friendResponseDto : friendsList) {
             assertThat(friendResponseDto.getFriendId()).isEqualTo(ids.get(idx));
             assertThat(friendResponseDto.getFriendStatus()).isEqualTo(FriendStatus.ACCEPT);
-            assertThat(friendResponseDto.getNickName()).isEqualTo(nicknames.get(idx++));
+            assertThat(friendResponseDto.getNickname()).isEqualTo(nicknames.get(idx++));
         }
     }
 
