@@ -35,7 +35,7 @@ public class FriendListResponseDto {
     public static class FriendResponseDto {
         private Long friendId;
 
-        private String nickName;
+        private String nickname;
 
         private FriendStatus friendStatus;
 
@@ -45,7 +45,7 @@ public class FriendListResponseDto {
         }
 
         public void addNickName(String nickName) {
-            this.nickName = nickName;
+            this.nickname = nickName;
         }
     }
 }
