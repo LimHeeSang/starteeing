@@ -2,6 +2,9 @@ package com.starting.domain.friends.service;
 
 import com.starting.domain.friends.entity.Friend;
 import com.starting.domain.friends.entity.FriendStatus;
+import com.starting.domain.friends.exception.AlreadyFriendException;
+import com.starting.domain.friends.exception.AlreadyRequestFriendException;
+import com.starting.domain.friends.exception.AlreadyResponseFriendException;
 import com.starting.domain.friends.repository.FriendRepository;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.repository.UserMemberRepository;
@@ -61,7 +64,7 @@ public class FriendServiceExceptionTest {
 
         assertThatThrownBy(() -> {
             friendService.requestFriend(member1.getId(), "userB");
-        }).isInstanceOf(IllegalCallerException.class);
+        }).isInstanceOf(AlreadyRequestFriendException.class);
     }
 
     @Test
@@ -73,7 +76,7 @@ public class FriendServiceExceptionTest {
 
         assertThatThrownBy(() -> {
             friendService.requestFriend(member1.getId(), "userB");
-        }).isInstanceOf(IllegalCallerException.class);
+        }).isInstanceOf(AlreadyResponseFriendException.class);
     }
 
     @Test
@@ -85,7 +88,7 @@ public class FriendServiceExceptionTest {
 
         assertThatThrownBy(() -> {
             friendService.requestFriend(member1.getId(), "userB");
-        }).isInstanceOf(IllegalCallerException.class);
+        }).isInstanceOf(AlreadyFriendException.class);
     }
 
     private void setUpCommonGiven() {
