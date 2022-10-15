@@ -1,6 +1,9 @@
 package com.starting.domain.friends.entity;
 
 import com.starting.domain.common.BaseTimeEntity;
+import com.starting.domain.friends.exception.AlreadyFriendException;
+import com.starting.domain.friends.exception.AlreadyRequestFriendException;
+import com.starting.domain.friends.exception.AlreadyResponseFriendException;
 import com.starting.domain.member.entity.UserMember;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -71,13 +74,13 @@ public class Friend extends BaseTimeEntity {
 
     public void reRequestFriend() {
         if (isStatusRequest()) {
-            throw new IllegalCallerException("이미 친구요청을 보낸 회원입니다.");
+            throw new AlreadyRequestFriendException();
         }
         if (isStatusAccept()) {
-            throw new IllegalCallerException("이미 친구인 회원입니다.");
+            throw new AlreadyFriendException();
         }
         if (isStatusResponse()) {
-            throw new IllegalCallerException("이미 친구요청을 받은 회원입니다. 친구수락목록을 확인하세요");
+            throw new AlreadyResponseFriendException();
         }
         changeStatusToRequest();
     }
