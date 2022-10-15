@@ -4,7 +4,7 @@ import com.starting.domain.friends.dto.FriendListResponseDto;
 import com.starting.domain.friends.entity.Friend;
 import com.starting.domain.friends.entity.FriendStatus;
 import com.starting.domain.friends.exception.NotExistFriendException;
-import com.starting.domain.friends.exception.NotExistPreRequest;
+import com.starting.domain.friends.exception.NotExistPreviousRequestException;
 import com.starting.domain.friends.repository.FriendRepository;
 import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.exception.NotExistMemberException;
@@ -57,10 +57,10 @@ public class FriendService {
         UserMember fromMember = getUserMemberForNickname(fromNickname);
 
         Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
-                NotExistPreRequest::new
+                NotExistPreviousRequestException::new
         );
         Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
-                NotExistPreRequest::new
+                NotExistPreviousRequestException::new
         );
 
         toFriend.acceptFriend();
@@ -75,10 +75,10 @@ public class FriendService {
         UserMember fromMember = getUserMemberForNickname(fromNickname);
 
         Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
-                NotExistPreRequest::new
+                NotExistPreviousRequestException::new
         );
         Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
-                NotExistPreRequest::new
+                NotExistPreviousRequestException::new
         );
 
         toFriend.rejectFriend();
@@ -93,10 +93,10 @@ public class FriendService {
         UserMember fromMember = getUserMemberForNickname(fromNickname);
 
         Friend toFriend = friendRepository.findByUserMemberAndFriendId(toMember, fromMember.getId()).orElseThrow(
-                NotExistPreRequest::new
+                NotExistPreviousRequestException::new
         );
         Friend fromFriend = friendRepository.findByUserMemberAndFriendId(fromMember, toMember.getId()).orElseThrow(
-                NotExistPreRequest::new
+                NotExistPreviousRequestException::new
         );
 
         toFriend.deleteFriend();
@@ -117,7 +117,7 @@ public class FriendService {
     }
 
     /**
-     * 친구로 등록된 친구리스트 조회
+     * 친구로 등록된 리스트 조회
      */
     @Transactional(readOnly = true)
     public FriendListResponseDto getAcceptFriendsList(Long memberId) {
