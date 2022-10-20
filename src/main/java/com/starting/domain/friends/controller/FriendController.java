@@ -17,21 +17,21 @@ public class FriendController {
     private final ResponseService responseService;
 
     /**
-     * 친구 리스트 조회
+     * 친구 관계 리스트 조회
      */
     @GetMapping("/friend/all/{memberId}")
     public ResponseEntity<SingleResult> getFriendsList(@PathVariable Long memberId) {
         FriendListResponseDto friendsList = friendService.getFriendsList(memberId);
-        return ResponseEntity.ok(responseService.getSingleResult(friendsList));
+        return ResponseEntity.ok(responseService.getSingleResult(friendsList.getResult()));
     }
 
     /**
-     * 수락된 친구 리스트 조회
+     * 수락된 친구 관계 리스트 조회
      */
     @GetMapping("/friend/all/accept/{memberId}")
     public ResponseEntity<SingleResult> getAcceptFriendsList(@PathVariable Long memberId) {
         FriendListResponseDto friendList = friendService.getAcceptFriendsList(memberId);
-        return ResponseEntity.ok(responseService.getSingleResult(friendList));
+        return ResponseEntity.ok(responseService.getSingleResult(friendList.getResult()));
     }
 
     /**
