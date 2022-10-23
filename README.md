@@ -25,4 +25,10 @@
 + Social Login 기능 구현
 + 클린 코드, 자바 코드 컨벤션, 객체지향 생활 체조 원칙, 유닛 테스트 코드 의시적인 연습
   <br/><br/>
-  
+
+## API 설계
+![img.png](member_api.png)
+![img_1.png](friend_api.png)
+![img_2.png](team_api.png)
+![img_3.png](meeting_api.png)
+<br/><br/>
