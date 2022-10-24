@@ -28,8 +28,6 @@ public class Team extends BaseTimeEntity {
 
     private String name;
 
-    private Long score;
-
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<TeamUserMember> members = new ArrayList<>();
 
