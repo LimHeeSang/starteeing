@@ -14,7 +14,7 @@
 + 명칭 : starting_project
 + 개발 인원 : 프론트(2명), __백엔드(1명, 임희상)__
 + 서비스 기능 : 소셜 로그인(Kakao), 마이 페이지, 친구(요청, 수락, 거절, 삭제), 팀(생성, 인원 추가, 삭제), 과팅(뽑기, 넣기)
-+ 개발 환경 : Intellij, Springboot 2.6.7, Java 11, Mysql 8.0, Jpa(Spring Data JPA), SpringSecurity
++ 개발 환경 : Intellij, Springboot 2.6.7, Java 11, Mysql 8.0, Jpa(Spring Data JPA), SpringSecurity, SpringOauth2Client
 + 형상 관리 툴 : git
 + 협업 툴 : notion
 + 시연 영상 : 프론트 개발 완료 후 추가 예정
