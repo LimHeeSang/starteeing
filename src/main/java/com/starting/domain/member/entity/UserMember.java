@@ -46,7 +46,7 @@ public class UserMember extends Member {
     @Embedded
     private SchoolInfo schoolInfo;
 
-    @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userMember", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TeamUserMember> teams = new ArrayList<>();
 
     {
