@@ -23,7 +23,7 @@ public class TeamUserMember extends BaseTimeEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private UserMember userMember;
 
