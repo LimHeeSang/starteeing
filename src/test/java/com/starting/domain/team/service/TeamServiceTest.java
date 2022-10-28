@@ -4,10 +4,10 @@ import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.member.repository.MemberRepository;
 import com.starting.domain.team.dto.TeamCreateRequestDto;
 import com.starting.domain.team.entity.Team;
+import com.starting.domain.team.entity.TeamUserMember;
 import com.starting.domain.team.repository.TeamRepository;
 import com.starting.domain.team.repository.TeamUserMemberRepository;
 import com.starting.test.TestUserMemberFactory;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 
@@ -57,7 +58,6 @@ class TeamServiceTest {
                 .members(List.of(member1, member2, member3))
                 .build();
 
-
         userMemberId1 = 1L;
         userMemberId2 = 2L;
         userMemberId3 = 3L;
@@ -72,15 +72,26 @@ class TeamServiceTest {
 
     @Test
     void createTeam() {
-        TeamCreateRequestDto createRequestDto = createTeamCreateRequestDto();
-
         given(memberRepository.findById(any())).willReturn(Optional.of(member1));
         given(memberRepository.findAllById(any())).willReturn(List.of(member1, member2, member3));
 
         given(teamRepository.save(any())).willReturn(testTeam);
+        Long teamId = teamService.createTeam(userMemberId1, createTeamCreateRequestDto());
 
-        Long teamId = teamService.createTeam(userMemberId1, createRequestDto);
-        Assertions.assertThat(teamId).isEqualTo(testTeamId);
+        assertThat(teamId).isEqualTo(testTeamId);
+    }
+
+    @Test
+    void withDrawTeam() {
+        given(memberRepository.findById(any())).willReturn(Optional.of(member1));
+        given(teamRepository.findByIdWithMembers(any())).willReturn(Optional.of(testTeam));
+        given(teamUserMemberRepository.findByTeamAndUserMember(any(), any())).willReturn(Optional.of(createTeamUserMember()));
+
+        teamService.withDrawTeam(userMemberId1, testTeamId);
+    }
+
+    private TeamUserMember createTeamUserMember() {
+        return TeamUserMember.builder().team(testTeam).userMember(member1).build();
     }
 
     private TeamCreateRequestDto createTeamCreateRequestDto() {
