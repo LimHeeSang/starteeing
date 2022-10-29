@@ -57,6 +57,7 @@ public class TeamService {
      * 팀 멤버 추가
      */
     public void addTeamMember(Long toMemberId, Long teamId, Long fromMemberId) {
+        memberRepository.findById(toMemberId).orElseThrow(NotExistMemberException::new);
         Team findTeam = teamRepository.findByIdWithMembers(teamId).orElseThrow(IllegalArgumentException::new);
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(NotExistMemberException::new);
 
