@@ -90,6 +90,15 @@ class TeamServiceTest {
         teamService.withDrawTeam(userMemberId1, testTeamId);
     }
 
+    @Test
+    void addMember() {
+        given(memberRepository.findById(any())).willReturn(Optional.of(member1));
+        given(teamRepository.findByIdWithMembers(any())).willReturn(Optional.of(testTeam));
+        given(memberRepository.findById(any())).willReturn(Optional.of(member2));
+
+        teamService.addTeamMember(userMemberId1, testTeamId, userMemberId2);
+    }
+
     private TeamUserMember createTeamUserMember() {
         return TeamUserMember.builder().team(testTeam).userMember(member1).build();
     }
