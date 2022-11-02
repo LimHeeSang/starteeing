@@ -2,6 +2,7 @@ package com.starting.domain.team.service;
 
 import com.starting.domain.member.entity.Member;
 import com.starting.domain.member.entity.UserMember;
+import com.starting.domain.member.exception.ExistMemberException;
 import com.starting.domain.member.exception.NotExistMemberException;
 import com.starting.domain.member.repository.MemberRepository;
 import com.starting.domain.team.dto.TeamCreateRequestDto;
@@ -61,6 +62,9 @@ public class TeamService {
         Team findTeam = teamRepository.findByIdWithMembers(teamId).orElseThrow(IllegalArgumentException::new);
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(NotExistMemberException::new);
 
+        if (teamUserMemberRepository.existsByTeamAndUserMember(findTeam, (UserMember) fromMember)) {
+            throw new ExistMemberException();
+        }
         findTeam.addTeamMember(fromMember);
     }
 
