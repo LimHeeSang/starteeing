@@ -1,7 +1,6 @@
 package com.starting.domain.team.repository;
 
 import com.starting.domain.member.entity.Member;
-import com.starting.domain.member.entity.UserMember;
 import com.starting.domain.team.entity.Team;
 import com.starting.test.TestUserMemberFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +19,6 @@ class TeamRepositoryTest {
     private TeamRepository teamRepository;
 
     private Team testTeam;
-    private UserMember userMember1;
-    private UserMember userMember2;
-
 
     @BeforeEach
     void setUp() {
