@@ -73,7 +73,7 @@ public class TeamService {
      */
     public TeamListResponseDto getTeamList(Long memberId) {
         Member findMember = memberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
-        List<TeamUserMember> teamUserMembers = teamUserMemberRepository.findAllByUserMemberWithTeam((UserMember) findMember);
+        List<TeamUserMember> teamUserMembers = teamUserMemberRepository.findAllByUserMember((UserMember) findMember);
 
         return TeamListResponseDto.builder().teamUserMembers(teamUserMembers).build();
     }
