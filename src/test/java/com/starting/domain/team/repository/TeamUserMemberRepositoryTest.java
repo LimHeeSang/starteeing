@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +24,7 @@ class TeamUserMemberRepositoryTest {
     TeamRepository teamRepository;
 
     private Team testTeam1;
+    private Team testTeam2;
     private UserMember userMember1;
     private UserMember userMember2;
 
@@ -37,7 +39,13 @@ class TeamUserMemberRepositoryTest {
                 .members(userMembers)
                 .build();
 
+        testTeam2 = Team.builder()
+                .teamName("TestTeamName2")
+                .members(List.of(userMember1))
+                .build();
+
         teamRepository.save(testTeam1);
+        teamRepository.save(testTeam2);
     }
 
     @Test
@@ -45,6 +53,16 @@ class TeamUserMemberRepositoryTest {
         TeamUserMember teamUserMember = teamUserMemberRepository.findByTeamAndUserMember(testTeam1, userMember1).get();
         assertThat(teamUserMember.getTeam()).isEqualTo(testTeam1);
         assertThat(teamUserMember.getUserMember()).isEqualTo(userMember1);
+    }
+
+     @Test
+    void findAllByUserMember() {
+        List<TeamUserMember> teamUserMembers = teamUserMemberRepository.findAllByUserMember(userMember1);
+
+        List<Team> teams = teamUserMembers.stream()
+                .map(TeamUserMember::getTeam)
+                .collect(Collectors.toList());
+        assertThat(teams).contains(testTeam1, testTeam2);
     }
 
 }
