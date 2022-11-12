@@ -65,4 +65,12 @@ class TeamUserMemberRepositoryTest {
         assertThat(teams).contains(testTeam1, testTeam2);
     }
 
+    @Test
+    void existsByTeamAndUserMember() {
+        boolean result1 = teamUserMemberRepository.existsByTeamAndUserMember(testTeam1, userMember2);
+        boolean result2 = teamUserMemberRepository.existsByTeamAndUserMember(testTeam2, userMember2);
+
+        assertThat(result1).isTrue();
+        assertThat(result2).isFalse();
+    }
 }
