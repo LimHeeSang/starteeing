@@ -3,16 +3,18 @@ package com.starting.domain.team.dto;
 import com.starting.domain.team.entity.TeamUserMember;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TeamListResponseDto {
+@Getter
+public class TeamResponseDtos {
 
     private List<TeamResponseDto> result;
 
     @Builder
-    public TeamListResponseDto(List<TeamUserMember> teamUserMembers) {
+    public TeamResponseDtos(List<TeamUserMember> teamUserMembers) {
         this.result = mapToTeamResponseDtoList(teamUserMembers);
     }
 
@@ -23,8 +25,9 @@ public class TeamListResponseDto {
                 ).collect(Collectors.toList());
     }
 
+    @Getter
     @AllArgsConstructor
-    private static class TeamResponseDto {
+    public static class TeamResponseDto {
         private Long teamId;
 
         private String teamName;

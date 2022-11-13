@@ -6,7 +6,7 @@ import com.starting.domain.member.exception.ExistMemberException;
 import com.starting.domain.member.exception.NotExistMemberException;
 import com.starting.domain.member.repository.MemberRepository;
 import com.starting.domain.team.dto.TeamCreateRequestDto;
-import com.starting.domain.team.dto.TeamListResponseDto;
+import com.starting.domain.team.dto.TeamResponseDtos;
 import com.starting.domain.team.entity.Team;
 import com.starting.domain.team.entity.TeamUserMember;
 import com.starting.domain.team.repository.TeamRepository;
@@ -71,10 +71,10 @@ public class TeamService {
     /**
      * 팀 목록 조회하기
      */
-    public TeamListResponseDto getTeamList(Long memberId) {
+    public TeamResponseDtos getTeamList(Long memberId) {
         Member findMember = memberRepository.findById(memberId).orElseThrow(NotExistMemberException::new);
         List<TeamUserMember> teamUserMembers = teamUserMemberRepository.findAllByUserMember((UserMember) findMember);
 
-        return TeamListResponseDto.builder().teamUserMembers(teamUserMembers).build();
+        return TeamResponseDtos.builder().teamUserMembers(teamUserMembers).build();
     }
 }
