@@ -1,7 +1,7 @@
 package com.starting.domain.team.controller;
 
 import com.starting.domain.team.dto.TeamCreateRequestDto;
-import com.starting.domain.team.dto.TeamListResponseDto;
+import com.starting.domain.team.dto.TeamResponseDtos;
 import com.starting.domain.team.service.TeamService;
 import com.starting.global.response.ResponseService;
 import com.starting.global.response.result.CommonResult;
@@ -21,9 +21,9 @@ public class TeamController {
      * 팀 목록 조회
      */
     @GetMapping("/team/{memberId}")
-    public ResponseEntity<SingleResult> getTeamList(@PathVariable Long memberId) {
-        TeamListResponseDto teamListResponseDto = teamService.getTeamList(memberId);
-        return ResponseEntity.ok(responseService.getSingleResult(teamListResponseDto));
+    public ResponseEntity<SingleResult> getTeams(@PathVariable Long memberId) {
+        TeamResponseDtos teamResponseDtos = teamService.getTeamList(memberId);
+        return ResponseEntity.ok(responseService.getSingleResult(teamResponseDtos));
     }
 
     /**
